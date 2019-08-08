@@ -53,7 +53,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>blockchain-binance</artifactId>
+            <artifactId>blockchain-daps</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

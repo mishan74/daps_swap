@@ -24,7 +24,7 @@
         <module>bot-integration</module>
         <module>blockchain</module>
         <module>blockchain-web3</module>
-        <module>blockchain-binance</module>
+        <module>blockchain-daps</module>
     </modules>
 
     <properties>
