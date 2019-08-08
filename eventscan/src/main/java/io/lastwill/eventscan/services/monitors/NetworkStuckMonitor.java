@@ -37,18 +37,8 @@ public class NetworkStuckMonitor {
 
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
-    @Value("${io.lastwill.eventscan.network-stuck.interval.btc}")
-    private long btcInterval;
     @Value("${io.lastwill.eventscan.network-stuck.interval.eth}")
     private long ethInterval;
-    @Value("${io.lastwill.eventscan.network-stuck.interval.eos}")
-    private long eosInterval;
-    @Value("${io.lastwill.eventscan.network-stuck.interval.neo}")
-    private long neoInterval;
-    @Value("${io.lastwill.eventscan.network-stuck.interval.tron}")
-    private long tronInterval;
-    @Value("${io.lastwill.eventscan.network-stuck.interval.waves}")
-    private long wavesInterval;
     @Value("${io.lastwill.eventscan.network-stuck.interval.binance}")
     private long binanceInterval;
     @Value("${io.lastwill.eventscan.network-stuck.interval.pending}")
@@ -62,23 +52,7 @@ public class NetworkStuckMonitor {
     @PostConstruct
     protected void init() {
         checkFrequencies.put(NetworkType.ETHEREUM_MAINNET, ethInterval);
-        checkFrequencies.put(NetworkType.ETHEREUM_ROPSTEN, ethInterval);
-        checkFrequencies.put(NetworkType.BTC_MAINNET, btcInterval);
-        checkFrequencies.put(NetworkType.BTC_TESTNET_3, btcInterval);
-        checkFrequencies.put(NetworkType.RSK_MAINNET, ethInterval);
-        checkFrequencies.put(NetworkType.RSK_TESTNET, ethInterval);
-        checkFrequencies.put(NetworkType.RSK_FEDERATION_MAINNET, ethInterval);
-        checkFrequencies.put(NetworkType.RSK_FEDERATION_TESTNET, ethInterval);
-        checkFrequencies.put(NetworkType.NEO_MAINNET, neoInterval);
-        checkFrequencies.put(NetworkType.NEO_TESTNET, neoInterval);
-        checkFrequencies.put(NetworkType.EOS_MAINNET, eosInterval);
-        checkFrequencies.put(NetworkType.EOS_TESTNET, eosInterval);
-        checkFrequencies.put(NetworkType.TRON_MAINNET, tronInterval);
-        checkFrequencies.put(NetworkType.TRON_TESTNET, tronInterval);
-        checkFrequencies.put(NetworkType.WAVES_MAINNET, wavesInterval);
-        checkFrequencies.put(NetworkType.WAVES_TESTNET, wavesInterval);
         checkFrequencies.put(NetworkType.BINANCE_MAINNET, binanceInterval);
-        checkFrequencies.put(NetworkType.BINANCE_TESTNET, binanceInterval);
 
         notifyFrequencies.putAll(checkFrequencies);
 

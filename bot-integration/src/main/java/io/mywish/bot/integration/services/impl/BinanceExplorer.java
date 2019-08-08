@@ -9,9 +9,9 @@ public class BinanceExplorer implements BlockchainExplorer {
     private final NetworkType networkType;
     private final String host;
 
-    public BinanceExplorer(boolean isTestnet) {
-        this.host =  (isTestnet ? "testnet-" : "") + "explorer.binance.org";
-        this.networkType = isTestnet ? NetworkType.BINANCE_TESTNET : NetworkType.BINANCE_MAINNET;
+    public BinanceExplorer() {
+        this.host = "explorer.binance.org";
+        this.networkType = NetworkType.BINANCE_MAINNET;
     }
 
     private String build(String argType, String arg) {

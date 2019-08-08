@@ -54,14 +54,4 @@ public class BinanceNetwork extends WrapperNetwork {
     public WrapperTransactionReceipt getTxReceipt(WrapperTransaction transaction) {
         throw new UnsupportedOperationException("Method not supported");
     }
-
-    @Override
-    public boolean isPendingTransactionsSupported() {
-        return false;
-    }
-
-    @Override
-    public List<WrapperTransaction> fetchPendingTransactions() {
-        throw new UnsupportedOperationException("fetchPendingTransactions is not supported.");
-    }
 }

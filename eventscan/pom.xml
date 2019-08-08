@@ -12,9 +12,9 @@
     <artifactId>eventscan</artifactId>
 
     <properties>
-        <db-url>jdbc:postgresql://localhost/lastwill_new</db-url>
-        <db-user>lastwill_new</db-user>
-        <db-password>lastwill_new</db-password>
+        <db-url>jdbc:postgresql://localhost/daps</db-url>
+        <db-user>daps</db-user>
+        <db-password>daps</db-password>
         <web3-base-url>http://localhost:8545/</web3-base-url>
         <backend-base-url>http://demo.mywillplatform.io/api/v1/payment_notify</backend-base-url>
         <token-address>0x1b22c32cd936cb97c28c5690a0695a82abf688e6</token-address>
@@ -56,42 +56,10 @@
             <artifactId>blockchain-binance</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!-- Runtime -->
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>blockchain-btc</artifactId>
-            <version>${project.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>blockchain-neo</artifactId>
-            <version>${project.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>blockchain-eos</artifactId>
-            <version>${project.version}</version>
-            <scope>runtime</scope>
-        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>blockchain-web3</artifactId>
             <version>${project.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>blockchain-tron</artifactId>
-            <version>${project.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>blockchain-waves</artifactId>
-            <version>${project.version}</version>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -134,11 +102,6 @@
             <version>${okhttp3.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.rabbitmq</groupId>
-            <artifactId>amqp-client</artifactId>
-            <version>${rabbitmq.version}</version>
-        </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>

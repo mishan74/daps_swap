@@ -19,9 +19,7 @@ public class NetworkProvider {
 
     @PostConstruct
     protected void init() {
-        networkByName.keySet().forEach(network -> {
-            networkByType.put(NetworkType.valueOf(network), networkByName.get(network));
-        });
+        networkByName.keySet().forEach(network -> networkByType.put(NetworkType.valueOf(network), networkByName.get(network)));
     }
 
     public WrapperNetwork get(NetworkType networkType) {

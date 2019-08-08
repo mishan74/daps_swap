@@ -95,6 +95,45 @@ public class MyWishBot extends TelegramLongPollingBot {
         }
     }
 
+    public void onWishSwapLowBalance(Long linkId,
+                                     Long swapId,
+                                     String fromAddress,
+                                     String fromAddressLink,
+                                     String toAddress,
+                                     String toAddressLink,
+                                     String ethAddress,
+                                     String ethAddressLink,
+                                     String need,
+                                     String have) {
+        final String message = String.format("WISH swap (%s, %s): insufficient funds to send to [%s](%s) ([%s](%s)). " +
+                        "Need %s but have only %s. " +
+                        "Please replenish [%s](%s).",
+                linkId, swapId, toAddress, toAddressLink, ethAddress, ethAddressLink, need, have, fromAddress, fromAddressLink);
+
+        sendToAllChats(new SendMessage().enableMarkdown(true).setText(message));
+    }
+
+    public void onWishSwapBurn(Long linkId, Long swapId, String ethAddress, String ethAddressLink, String bnbAddress, String bnbAddressLink, String amount, String burnTx) {
+        final String message = String.format("WISH swap (%s, %s): [%s](%s) ([%s](%s)) burned [%s](%s).",
+                linkId, swapId, ethAddress, ethAddressLink, bnbAddress, bnbAddressLink, amount, burnTx);
+
+        sendToAllChats(new SendMessage().enableMarkdown(true).setText(message));
+    }
+
+    public void onWishSwapTransferError(Long linkId, Long swapId, String amount, String bnbTxHashLink, String bnbAddress, String bnbAddressLink, String ethAddress, String ethAddressLink) {
+        final String message = String.format("WISH swap (%s, %s): [%s](%s) transfer *failed* to [%s](%s) ([%s](%s)).",
+                linkId, swapId, amount, bnbTxHashLink, bnbAddress, bnbAddressLink, ethAddress, ethAddressLink);
+
+        sendToAllChats(new SendMessage().enableMarkdown(true).setText(message));
+    }
+
+    public void onWishSwapTransfer(Long linkId, Long swapId, String amount, String transferTxLink, String bnbAddress, String bnbAddressLink, String ethAddress, String ethAddressLink) {
+        final String message = String.format("WISH swap (%s, %s): [%s](%s) transferred to [%s](%s) ([%s](%s)).",
+                linkId, swapId, amount, transferTxLink, bnbAddress, bnbAddressLink, ethAddress, ethAddressLink);
+
+        sendToAllChats(new SendMessage().enableMarkdown(true).setText(message));
+    }
+
     public void onContract(String network, Integer productId, String productType, Integer id, String cost, final String address, String addressLink) {
         final String message = new StringBuilder()
                 .append(network)

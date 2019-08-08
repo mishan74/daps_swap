@@ -3,7 +3,6 @@ package io.lastwill.eventscan;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.rabbitmq.client.ConnectionFactory;
 import io.lastwill.eventscan.events.EventModule;
 import io.mywish.scanner.ScannerModule;
 import okhttp3.OkHttpClient;
@@ -64,14 +63,6 @@ public class Application {
                 .build();
     }
 
-    @ConditionalOnProperty("io.lastwill.eventscan.backend-mq.url")
-    @Bean
-    public ConnectionFactory connectionFactory(@Value("${io.lastwill.eventscan.backend-mq.url}") URI uri) throws NoSuchAlgorithmException, KeyManagementException, URISyntaxException {
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.setUri(uri);
-        factory.setAutomaticRecoveryEnabled(true);
-        return factory;
-    }
 
     @Bean
     public OkHttpClient okHttpClient(

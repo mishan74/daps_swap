@@ -31,9 +31,6 @@ public class Web3Network extends WrapperNetwork {
     private WrapperBlockWeb3Service blockBuilder;
 
     @Autowired
-    private WrapperTransactionWeb3Service transactionBuilder;
-
-    @Autowired
     private WrapperTransactionReceiptWeb3Service transactionReceiptBuilder;
 
     private final int pendingThreshold;
@@ -98,36 +95,5 @@ public class Web3Network extends WrapperNetwork {
                         .send()
                         .getResult()
         );
-    }
-
-    @Override
-    public boolean isPendingTransactionsSupported() {
-        return true;
-    }
-
-    @Override
-    public List<WrapperTransaction> fetchPendingTransactions() throws Exception {
-        if (web3j instanceof Web3jEx) {
-            List<Transaction> result = ((Web3jEx) web3j).parityGetPendingTransactions().send()
-                    .getResult();
-
-            if (result == null) {
-                return Collections.emptyList();
-            }
-
-            return result
-                    .stream()
-                    .map(transactionBuilder::build)
-                    .collect(Collectors.toList());
-        }
-        if (pendingTransactions.isEmpty()) {
-            return Collections.emptyList();
-        }
-        ArrayList<WrapperTransaction> result = new ArrayList<>(pendingTransactions.size() + 3);
-        while (!pendingTransactions.isEmpty()) {
-            Transaction transaction = pendingTransactions.remove();
-            result.add(transactionBuilder.build(transaction));
-        }
-        return result;
     }
 }
