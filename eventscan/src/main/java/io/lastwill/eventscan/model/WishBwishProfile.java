@@ -1,6 +1,6 @@
 package io.lastwill.eventscan.model;
 
-import io.lastwill.eventscan.services.Bep2WishSender;
+import io.lastwill.eventscan.services.senders.Bep2WishSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

@@ -15,6 +15,6 @@ public class WrapperType<T extends Type> {
     }
 
     public static <T extends Type> WrapperType<T> create(final Class<T> c, boolean indexed) {
-        return new WrapperType<T>(TypeReference.create(c), indexed);
+        return new WrapperType<>(TypeReference.create(c), indexed);
     }
 }

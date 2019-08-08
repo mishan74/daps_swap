@@ -9,9 +9,9 @@ public class EtherescanExplorer implements BlockchainExplorer {
     private final NetworkType networkType;
     private final String host;
 
-    public EtherescanExplorer(boolean testnet) {
-        this.host = testnet ? "ropsten.etherscan.io" : "etherscan.io";
-        this.networkType = testnet ? NetworkType.ETHEREUM_ROPSTEN : NetworkType.ETHEREUM_MAINNET;
+    public EtherescanExplorer() {
+        this.host = "etherscan.io";
+        this.networkType = NetworkType.ETHEREUM_MAINNET;
     }
 
     private String build(String argType, String arg) {

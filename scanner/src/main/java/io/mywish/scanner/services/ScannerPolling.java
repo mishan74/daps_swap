@@ -49,16 +49,6 @@ public abstract class ScannerPolling extends Scanner {
                     log.info("{}: there is no block from {} ms.", network.getType(), interval);
                 }
 
-                if (network.isPendingTransactionsSupported()) {
-                    log.debug("Get actual list of pending.");
-                    List<WrapperTransaction> pendingTxs = network.fetchPendingTransactions();
-                    if (!pendingTxs.isEmpty()) {
-                        eventPublisher.publish(new NewPendingTransactionsEvent(
-                                network.getType(),
-                                pendingTxs
-                        ));
-                    }
-                }
 
                 log.debug("All blocks processed, wait new one.");
                 synchronized (sync) {

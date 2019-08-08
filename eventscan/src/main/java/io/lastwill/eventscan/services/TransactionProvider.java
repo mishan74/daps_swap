@@ -35,14 +35,4 @@ public class TransactionProvider {
     public CompletionStage<WrapperTransactionReceipt> getTransactionReceiptAsync(NetworkType networkType, WrapperTransaction transaction) {
         return networkProvider.get(networkType).getTxReceiptAsync(transaction);
     }
-//
-//    public CompletionStage<List<TransactionReceipt>> getTransactionReceiptsAsync(Collection<String> hashes) {
-//        val futures = hashes.stream()
-//                .map(web3Provider::ethGetTransactionReceipt)
-//                .map(JsonRpcRequest::sendAsync)
-//                .map(future -> future.thenApply(EthGetTransactionReceipt::getResult))
-//                .collect(Collectors.toList());
-//
-//        return sequence(futures);
-//    }
 }

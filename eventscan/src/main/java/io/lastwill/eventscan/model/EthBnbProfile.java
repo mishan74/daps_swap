@@ -1,6 +1,6 @@
 package io.lastwill.eventscan.model;
 
-import io.lastwill.eventscan.services.Sender;
+import io.lastwill.eventscan.services.senders.Sender;
 import lombok.Getter;
 
 
