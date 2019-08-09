@@ -1,1 +1,1 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=io.mywish.binance.blockchain.BinanceBCModule
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=io.mywish.daps.blockchain.BinanceBCModule

@@ -1,6 +1,6 @@
-package io.mywish.binance.blockchain.services;
+package io.mywish.daps.blockchain.services;
 
-import io.mywish.binance.blockchain.model.BinanceBlock;
+import io.mywish.daps.blockchain.model.BinanceBlock;
 import io.mywish.blockchain.WrapperBlock;
 import io.mywish.blockchain.WrapperTransaction;
 import io.mywish.blockchain.service.WrapperBlockService;

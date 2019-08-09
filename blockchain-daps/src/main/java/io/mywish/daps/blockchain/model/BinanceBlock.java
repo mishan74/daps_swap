@@ -1,4 +1,4 @@
-package io.mywish.binance.blockchain.model;
+package io.mywish.daps.blockchain.model;
 
 import java.util.List;
 

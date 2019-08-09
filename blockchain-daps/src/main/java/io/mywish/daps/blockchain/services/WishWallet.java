@@ -1,8 +1,8 @@
-package io.mywish.binance.blockchain.services;
+package io.mywish.daps.blockchain.services;
 
 import com.binance.dex.api.client.BinanceDexEnvironment;
 import io.lastwill.eventscan.model.CryptoCurrency;
-import io.mywish.binance.blockchain.model.WrapperWallet;
+import io.mywish.daps.blockchain.model.WrapperWallet;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 

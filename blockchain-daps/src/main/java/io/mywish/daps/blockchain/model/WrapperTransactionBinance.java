@@ -1,4 +1,4 @@
-package io.mywish.binance.blockchain.model;
+package io.mywish.daps.blockchain.model;
 
 import com.binance.dex.api.client.domain.broadcast.Transaction;
 import io.mywish.blockchain.WrapperOutput;

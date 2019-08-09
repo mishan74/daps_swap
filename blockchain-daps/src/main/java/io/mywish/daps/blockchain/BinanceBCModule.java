@@ -1,14 +1,14 @@
-package io.mywish.binance.blockchain;
+package io.mywish.daps.blockchain;
 
 import com.binance.dex.api.client.BinanceDexApiClientFactory;
 import com.binance.dex.api.client.BinanceDexApiNodeClient;
 import com.binance.dex.api.client.BinanceDexEnvironment;
 import io.lastwill.eventscan.model.NetworkType;
 import io.lastwill.eventscan.repositories.LastBlockRepository;
-import io.mywish.binance.blockchain.model.WrapperWallet;
-import io.mywish.binance.blockchain.services.BinanceNetwork;
-import io.mywish.binance.blockchain.services.BinanceScanner;
-import io.mywish.binance.blockchain.services.Wallets;
+import io.mywish.daps.blockchain.model.WrapperWallet;
+import io.mywish.daps.blockchain.services.BinanceNetwork;
+import io.mywish.daps.blockchain.services.BinanceScanner;
+import io.mywish.daps.blockchain.services.Wallets;
 import io.mywish.scanner.services.LastBlockDbPersister;
 import io.mywish.scanner.services.LastBlockFilePersister;
 import io.mywish.scanner.services.LastBlockPersister;

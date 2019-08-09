@@ -1,10 +1,10 @@
-package io.mywish.binance.blockchain.services;
+package io.mywish.daps.blockchain.services;
 
 import com.binance.dex.api.client.BinanceDexApiNodeClient;
 import com.binance.dex.api.client.domain.BlockMeta;
 import com.binance.dex.api.client.domain.broadcast.Transaction;
 import io.lastwill.eventscan.model.NetworkType;
-import io.mywish.binance.blockchain.model.BinanceBlock;
+import io.mywish.daps.blockchain.model.BinanceBlock;
 import io.mywish.blockchain.WrapperBlock;
 import io.mywish.blockchain.WrapperNetwork;
 import io.mywish.blockchain.WrapperTransaction;

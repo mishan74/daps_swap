@@ -1,11 +1,11 @@
-package io.mywish.binance.blockchain.services;
+package io.mywish.daps.blockchain.services;
 
 import com.binance.dex.api.client.domain.broadcast.MultiTransfer;
 import com.binance.dex.api.client.domain.broadcast.Transaction;
 import com.binance.dex.api.client.domain.broadcast.Transfer;
 import com.binance.dex.api.client.domain.broadcast.TxType;
-import io.mywish.binance.blockchain.model.WrapperOutputBinance;
-import io.mywish.binance.blockchain.model.WrapperTransactionBinance;
+import io.mywish.daps.blockchain.model.WrapperOutputBinance;
+import io.mywish.daps.blockchain.model.WrapperTransactionBinance;
 import io.mywish.blockchain.WrapperOutput;
 import io.mywish.blockchain.WrapperTransaction;
 import io.mywish.blockchain.service.WrapperTransactionService;
