@@ -40,7 +40,7 @@ public class NetworkStuckMonitor {
     @Value("${io.lastwill.eventscan.network-stuck.interval.eth}")
     private long ethInterval;
     @Value("${io.lastwill.eventscan.network-stuck.interval.binance}")
-    private long binanceInterval;
+    private long dapsInterval;
     @Value("${io.lastwill.eventscan.network-stuck.interval.pending}")
     private long pendingInterval;
     @Value("${io.lastwill.eventscan.network-stuck.interval.max-notification}")
@@ -52,7 +52,7 @@ public class NetworkStuckMonitor {
     @PostConstruct
     protected void init() {
         checkFrequencies.put(NetworkType.ETHEREUM_MAINNET, ethInterval);
-        checkFrequencies.put(NetworkType.BINANCE_MAINNET, binanceInterval);
+        checkFrequencies.put(NetworkType.DAPS_MAINNET, dapsInterval);
 
         notifyFrequencies.putAll(checkFrequencies);
 

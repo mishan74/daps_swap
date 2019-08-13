@@ -11,7 +11,7 @@ public class BinanceExplorer implements BlockchainExplorer {
 
     public BinanceExplorer() {
         this.host = "explorer.binance.org";
-        this.networkType = NetworkType.BINANCE_MAINNET;
+        this.networkType = NetworkType.DAPS_MAINNET;
     }
 
     private String build(String argType, String arg) {

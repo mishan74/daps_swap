@@ -18,7 +18,7 @@ public class TokensTransferredEvent extends BaseEvent {
             EthToBnbSwapEntry ethEntry,
             String bnbSenderAddress
     ) {
-        super(NetworkType.BINANCE_MAINNET);
+        super(NetworkType.DAPS_MAINNET);
         this.coin = coin;
         this.decimals = decimals;
         this.ethEntry = ethEntry;

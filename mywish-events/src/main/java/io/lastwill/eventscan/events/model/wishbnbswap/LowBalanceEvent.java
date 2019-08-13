@@ -17,7 +17,7 @@ public class LowBalanceEvent extends BaseEvent {
     private final String fromAddress;
 
     public LowBalanceEvent(String coin, int decimals, EthToBnbSwapEntry swapEntry, BigInteger need, BigInteger have, String fromAddress) {
-        super(NetworkType.BINANCE_MAINNET);
+        super(NetworkType.DAPS_MAINNET);
         this.coin = coin;
         this.decimals = decimals;
         this.swapEntry = swapEntry;

@@ -7,10 +7,10 @@ import java.util.EnumSet;
 @Getter
 public enum NetworkType {
     ETHEREUM_MAINNET(NetworkProviderType.WEB3),
-    BINANCE_MAINNET(NetworkProviderType.BINANCE);
+    DAPS_MAINNET(NetworkProviderType.DAPS);
 
     public final static String ETHEREUM_MAINNET_VALUE = "ETHEREUM_MAINNET";
-    public final static String BINANCE_MAINNET_VALUE = "BINANCE_MAINNET";
+    public final static String DAPS_MAINNET_VALUE = "DAPS_MAINNET";
 
 
     private final NetworkProviderType networkProviderType;

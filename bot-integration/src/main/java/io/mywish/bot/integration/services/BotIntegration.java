@@ -36,7 +36,7 @@ public class BotIntegration {
 
     private final Map<NetworkType, String> networkName = new HashMap<NetworkType, String>() {{
         put(NetworkType.ETHEREUM_MAINNET, "ETH");
-        put(NetworkType.BINANCE_MAINNET, "BNB");
+        put(NetworkType.DAPS_MAINNET, "DAPS");
     }};
 
     private final String defaultNetwork = "unknown";
@@ -46,10 +46,10 @@ public class BotIntegration {
         Long linkId = event.getSwapEntry().getLinkEntry().getId();
         Long swapId = event.getSwapEntry().getId();
         String fromAddress = event.getFromAddress();
-        String fromAddressLink = explorerProvider.getOrStub(NetworkType.BINANCE_MAINNET)
+        String fromAddressLink = explorerProvider.getOrStub(NetworkType.DAPS_MAINNET)
                 .buildToAddress(fromAddress);
         String toAddress = event.getSwapEntry().getLinkEntry().getBnbAddress();
-        String toAddressLink = explorerProvider.getOrStub(NetworkType.BINANCE_MAINNET)
+        String toAddressLink = explorerProvider.getOrStub(NetworkType.DAPS_MAINNET)
                 .buildToAddress(toAddress);
         String ethAddress = event.getSwapEntry().getLinkEntry().getEthAddress();
         String ethAddressLink = explorerProvider.getOrStub(NetworkType.ETHEREUM_MAINNET)
@@ -69,7 +69,7 @@ public class BotIntegration {
                 .buildToAddress(ethAddress);
         String bnbAddress = event.getBnbAddress() != null ? event.getBnbAddress() : "not linked";
         String bnbAddressLink = event.getBnbAddress() != null
-                ? explorerProvider.getOrStub(NetworkType.BINANCE_MAINNET).buildToAddress(bnbAddress)
+                ? explorerProvider.getOrStub(NetworkType.DAPS_MAINNET).buildToAddress(bnbAddress)
                 : "";
         String amount = toCurrency(event.getCoin(), event.getDecimals(), event.getSwapEntry().getAmount());
         String burnTx = explorerProvider.getOrStub(NetworkType.ETHEREUM_MAINNET)
@@ -84,11 +84,11 @@ public class BotIntegration {
         String amount = toCurrency(event.getCoin(), event.getDecimals(), event.getEthEntry().getAmount());
         String bnbTxHash = event.getEthEntry().getBnbTxHash();
         String bnbTxHashLink = bnbTxHash != null
-                ? explorerProvider.getOrStub(NetworkType.BINANCE_MAINNET).buildToTransaction(bnbTxHash)
+                ? explorerProvider.getOrStub(NetworkType.DAPS_MAINNET).buildToTransaction(bnbTxHash)
                 : "";
         String bnbAddress = event.getEthEntry().getLinkEntry().getBnbAddress();
         String bnbAddressLink = bnbAddress != null
-                ? explorerProvider.getOrStub(NetworkType.BINANCE_MAINNET).buildToAddress(bnbAddress)
+                ? explorerProvider.getOrStub(NetworkType.DAPS_MAINNET).buildToAddress(bnbAddress)
                 : "";
         String ethAddress = event.getEthEntry().getLinkEntry().getEthAddress();
         String ethAddressLink = ethAddress != null
@@ -102,10 +102,10 @@ public class BotIntegration {
         Long linkId = event.getEthEntry().getLinkEntry().getId();
         Long swapId = event.getEthEntry().getId();
         String amount = toCurrency(event.getCoin(), event.getDecimals(), event.getEthEntry().getAmount());
-        String transferTxLink = explorerProvider.getOrStub(NetworkType.BINANCE_MAINNET)
+        String transferTxLink = explorerProvider.getOrStub(NetworkType.DAPS_MAINNET)
                 .buildToTransaction(event.getEthEntry().getBnbTxHash());
         String bnbAddress = event.getEthEntry().getLinkEntry().getBnbAddress();
-        String bnbAddressLink = explorerProvider.getOrStub(NetworkType.BINANCE_MAINNET)
+        String bnbAddressLink = explorerProvider.getOrStub(NetworkType.DAPS_MAINNET)
                 .buildToAddress(bnbAddress);
         String ethAddress = event.getEthEntry().getLinkEntry().getEthAddress();
         String ethAddressLink = explorerProvider.getOrStub(NetworkType.ETHEREUM_MAINNET)
