@@ -1,12 +1,10 @@
-package io.lastwill.eventscan.services.monitors.ethbnbswap;
+package io.lastwill.eventscan.services.monitors.dapsswap;
 
 import io.lastwill.eventscan.events.model.contract.erc20.TransferEvent;
-import io.lastwill.eventscan.model.EthBnbProfile;
-import io.lastwill.eventscan.model.ProfileStorage;
-import io.lastwill.eventscan.events.model.wishbnbswap.TokensBurnedEvent;
+import io.lastwill.eventscan.events.model.dapsswap.TokensBurnedEvent;
 import io.lastwill.eventscan.model.*;
-import io.lastwill.eventscan.repositories.EthToBnbLinkEntryRepository;
-import io.lastwill.eventscan.repositories.EthToBnbSwapEntryRepository;
+import io.lastwill.eventscan.repositories.EthToDapsSwapEntryRepository;
+import io.lastwill.eventscan.repositories.EthToDapsConnectEntryRepository;
 import io.lastwill.eventscan.services.TransactionProvider;
 import io.mywish.blockchain.WrapperTransaction;
 import io.mywish.scanner.model.NewBlockEvent;
@@ -21,7 +19,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Component
+//@Component
 public class BurnMonitor {
     @Autowired
     private EventPublisher eventPublisher;
@@ -30,18 +28,16 @@ public class BurnMonitor {
     private TransactionProvider transactionProvider;
 
     @Autowired
-    private EthToBnbLinkEntryRepository linkRepository;
+    private EthToDapsConnectEntryRepository connectRepository;
 
     @Autowired
-    private EthToBnbSwapEntryRepository swapRepository;
+    private EthToDapsSwapEntryRepository swapRepository;
 
     @Autowired
     private ProfileStorage profileStorage;
 
-
     @EventListener
     public void onBurn(final NewBlockEvent newBlockEvent) {
-
         if (newBlockEvent.getNetworkType() != NetworkType.ETHEREUM_MAINNET) {
             return;
         }
@@ -50,9 +46,9 @@ public class BurnMonitor {
         if (entries == null || entries.size() == 0) return;
 
         for (Map.Entry<String, List<WrapperTransaction>> entry : entries.entrySet()) {
-            EthBnbProfile ethBnbProfile;
+            EthDapsProfile ethDapsProfile;
             try {
-                ethBnbProfile = profileStorage.getProfileByEthTokenAddress(entry.getKey());
+                ethDapsProfile = profileStorage.getProfileByEthTokenAddress(entry.getKey());
             } catch (NoSuchElementException ex) {
                 log.error(ex.getMessage());
                 continue;
@@ -65,10 +61,10 @@ public class BurnMonitor {
                                     .stream()
                                     .filter(event -> event instanceof TransferEvent)
                                     .map(event -> (TransferEvent) event)
-                                    .filter(event -> ethBnbProfile.getEthBurnerAddress().equalsIgnoreCase(event.getTo()))
+                                    .filter(event -> ethDapsProfile.getEthBurnerAddress().equalsIgnoreCase(event.getTo()))
                                     .forEach(transferEvents::add);
-                            List<EthToBnbSwapEntry> swapEntries = publishEvent(transferEvents, transaction, ethBnbProfile);
-                            sendToken(swapEntries, ethBnbProfile);
+                            List<EthToDapsSwapEntry> swapEntries = publishEvent(transferEvents, transaction, ethDapsProfile);
+                            sendToken(swapEntries, ethDapsProfile);
                         });
             }
         }
@@ -78,70 +74,69 @@ public class BurnMonitor {
         return event.getTransactionsByAddress()
                 .entrySet()
                 .stream()
-                .filter(entry -> profileStorage.getEthBnbProfiles()
+                .filter(entry -> profileStorage.getEthDapsProfiles()
                         .stream()
-                        .map(EthBnbProfile::getEthTokenAddress)
+                        .map(EthDapsProfile::getEthTokenAddress)
                         .collect(Collectors.toList())
                         .contains(entry.getKey()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-
-    private List<EthToBnbSwapEntry> publishEvent(List<TransferEvent> events, WrapperTransaction transaction, EthBnbProfile profile) {
+    private List<EthToDapsSwapEntry> publishEvent(List<TransferEvent> events, WrapperTransaction transaction, EthDapsProfile profile) {
         return events
                 .stream()
                 .map(transferEvent -> {
                     String ethAddress = transferEvent.getFrom().toLowerCase();
-                    BigInteger amount = convertEthToBnb(transferEvent.getTokens(), profile);
-                    String bnbAddress = null;
+                    BigInteger amount = convertEthToDaps(transferEvent.getTokens(), profile);
+                    String dapsAddress = null;
 
-                    EthToBnbLinkEntry linkEntry = linkRepository.findByEthAddress(ethAddress);
-                    if (linkEntry != null) {
-                        bnbAddress = linkEntry.getBnbAddress();
+                    EthToDapsConnectEntry connectEntry = connectRepository.findByEthAddress(ethAddress);
+                    if (connectEntry != null) {
+                        dapsAddress = connectEntry.getDapsAddress();
                     } else {
-                        log.warn("\"{}\" not linked", ethAddress);
+                        log.warn("\"{}\" not connected", ethAddress);
                     }
 
-                    EthToBnbSwapEntry swapEntry = swapRepository.findByEthTxHash(transaction.getHash());
+                    EthToDapsSwapEntry swapEntry = swapRepository.findByEthTxHash(transaction.getHash());
                     if (swapEntry != null) {
                         log.warn("Swap entry already in DB: {}", transaction.getHash());
                         return null;
                     }
-                    swapEntry = new EthToBnbSwapEntry(
-                            linkEntry,
+                    swapEntry = new EthToDapsSwapEntry(
+                            connectEntry,
                             amount,
                             transaction.getHash()
                     );
                     swapEntry = swapRepository.save(swapEntry);
-                    CryptoCurrency ethCoin = profile.getEth();
-                    CryptoCurrency bnbCoin = profile.getBnb();
-                    log.info("{} burned {} {}", ethAddress, profile.getSender().toString(amount, bnbCoin.getDecimals()), ethCoin);
+                    CryptoCurrency ethDapsCoin = profile.getEth();
+                    CryptoCurrency dapsCoin = profile.getDaps();
+                    log.info("{} burned {} {}", ethAddress, profile.getSender().toString(amount, dapsCoin.getDecimals()), ethDapsCoin);
 
                     eventPublisher.publish(new TokensBurnedEvent(
-                            ethCoin.name(),
-                            bnbCoin.getDecimals(),
+                            ethDapsCoin.name(),
+                            dapsCoin.getDecimals(),
                             swapEntry,
                             ethAddress,
-                            bnbAddress
+                            dapsAddress
                     ));
 
                     return swapEntry;
                 }).collect(Collectors.toList());
     }
 
-    private void sendToken(List<EthToBnbSwapEntry> swapEntries, EthBnbProfile profile) {
+    private void sendToken(List<EthToDapsSwapEntry> swapEntries, EthDapsProfile profile) {
         swapEntries
                 .stream()
                 .filter(Objects::nonNull)
                 .forEach(profile.getSender()::send);
     }
 
-    private BigInteger convertEthToBnb(BigInteger amount, EthBnbProfile profile) {
-        int ethWishDecimals = profile.getEth().getDecimals();
-        int bnbWishDecimals = profile.getBnb().getDecimals();
+    private BigInteger convertEthToDaps(BigInteger amount, EthDapsProfile profile) {
+        int ethDapsDecimals = profile.getEth().getDecimals();
+        int dapsDecimals = profile.getDaps().getDecimals();
 
         return amount
-                .multiply(BigInteger.TEN.pow(bnbWishDecimals))
-                .divide(BigInteger.TEN.pow(ethWishDecimals));
+                .multiply(BigInteger.TEN.pow(dapsDecimals))
+                .divide(BigInteger.TEN.pow(ethDapsDecimals));
     }
 }

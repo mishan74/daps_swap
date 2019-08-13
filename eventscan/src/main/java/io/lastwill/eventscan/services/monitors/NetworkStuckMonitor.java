@@ -1,10 +1,8 @@
 package io.lastwill.eventscan.services.monitors;
 
 import io.lastwill.eventscan.events.model.utility.NetworkStuckEvent;
-import io.lastwill.eventscan.events.model.utility.PendingStuckEvent;
 import io.lastwill.eventscan.model.NetworkType;
 import io.mywish.scanner.model.NewBlockEvent;
-import io.mywish.scanner.model.NewPendingTransactionsEvent;
 import io.mywish.scanner.services.EventPublisher;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -30,7 +28,6 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class NetworkStuckMonitor {
     private final ConcurrentHashMap<NetworkType, LastEvent> lastBlockEvents = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<NetworkType, LastEvent> lastPendingTxEvents = new ConcurrentHashMap<>();
 
     private final Map<NetworkType, Long> checkFrequencies = new HashMap<>();
     private final ConcurrentHashMap<NetworkType, Long> notifyFrequencies = new ConcurrentHashMap<>();
@@ -41,8 +38,6 @@ public class NetworkStuckMonitor {
     private long ethInterval;
     @Value("${io.lastwill.eventscan.network-stuck.interval.binance}")
     private long dapsInterval;
-    @Value("${io.lastwill.eventscan.network-stuck.interval.pending}")
-    private long pendingInterval;
     @Value("${io.lastwill.eventscan.network-stuck.interval.max-notification}")
     private long maxFrequency;
 
@@ -76,24 +71,8 @@ public class NetworkStuckMonitor {
         );
     }
 
-    @EventListener
-    private void newPendingTx(NewPendingTransactionsEvent event) {
-        lastPendingTxEvents.put(
-                event.getNetworkType(),
-                new LastEvent(
-                        LocalDateTime.now(ZoneOffset.UTC),
-                        Instant.now(),
-                        event.getPendingTransactions().size()
-                )
-        );
-    }
-
     public Map<NetworkType, LastEvent> getLastBlockEvents() {
         return Collections.unmodifiableMap(this.lastBlockEvents);
-    }
-
-    public Map<NetworkType, LastEvent> getLastPendingTxEvents() {
-        return Collections.unmodifiableMap(this.lastPendingTxEvents);
     }
 
     protected void checkNetworks() {
@@ -126,29 +105,6 @@ public class NetworkStuckMonitor {
                             ? notifyFrequency * 2
                             : maxFrequency;
                     notifyFrequencies.put(networkType, notifyFrequency);
-                });
-    }
-
-    //    @Scheduled(fixedDelayString = "${io.lastwill.eventscan.network-stuck.interval.pending}", initialDelayString = "${io.lastwill.eventscan.network-stuck.interval.pending}")
-    protected void checkPending() {
-        final LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-        lastPendingTxEvents.keySet()
-                .stream()
-//                .filter(networkType -> networkType == NetworkType.BTC_MAINNET || networkType == NetworkType.BTC_TESTNET_3)
-                .forEach(networkType -> {
-                    LastEvent lastEvent = lastPendingTxEvents.get(networkType);
-                    // last block + interval is in future
-                    if (lastEvent.receivedTime.plusSeconds(pendingInterval / 1000).isAfter(now)) {
-                        return;
-                    }
-
-                    eventPublisher.publish(
-                            new PendingStuckEvent(
-                                    networkType,
-                                    lastEvent.receivedTime,
-                                    (int) lastEvent.blockNo
-                            )
-                    );
                 });
     }
 

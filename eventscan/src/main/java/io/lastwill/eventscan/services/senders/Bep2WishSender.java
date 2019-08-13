@@ -8,10 +8,10 @@ import com.binance.dex.api.client.domain.Balance;
 import com.binance.dex.api.client.domain.TransactionMetadata;
 import com.binance.dex.api.client.domain.broadcast.TransactionOption;
 import com.binance.dex.api.client.domain.broadcast.Transfer;
-import io.lastwill.eventscan.events.model.wishbnbswap.*;
+import io.lastwill.eventscan.events.model.dapsswap.*;
 import io.lastwill.eventscan.model.*;
-import io.lastwill.eventscan.repositories.EthToBnbSwapEntryRepository;
-import io.mywish.binance.blockchain.services.Wallets;
+import io.lastwill.eventscan.repositories.EthToDapsSwapEntryRepository;
+import io.mywish.daps.blockchain.services.Wallets;
 import io.mywish.scanner.services.EventPublisher;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,17 +30,18 @@ import java.util.Objects;
 
 @Slf4j
 @Component
-public class Bep2WishSender implements Sender {
+public class Bep2WishSender /* implements Sender */ {
+    /*
     private static final BigInteger TRANSFER_FEE = BigInteger.valueOf(37500);
 
     @Autowired
     private EventPublisher eventPublisher;
 
     @Autowired
-    private BinanceDexApiNodeClient binanceClient;
+    private BinanceDexApiNodeClient dapsClient;
 
     @Autowired
-    private EthToBnbSwapEntryRepository swapRepository;
+    private EthToDapsSwapEntryRepository swapRepository;
 
     @Autowired
     private ProfileStorage profileStorage;
@@ -53,7 +54,7 @@ public class Bep2WishSender implements Sender {
     private BigInteger coinMaxLimit;
 
     @Override
-    public void send(EthToBnbSwapEntry swapEntry) {
+    public void send(EthToDapsSwapEntry swapEntry) {
         if (swapEntry.getLinkEntry() == null) {
             return;
         }
@@ -68,10 +69,10 @@ public class Bep2WishSender implements Sender {
             }
         }
 
-        EthBnbProfile ethBnbProfile = profileStorage.getProfileByEthSymbol(swapEntry.getLinkEntry().getSymbol());
-        String bnbTestSymbol = ethBnbProfile.getTransferSymbol();
-        String bnbSymbol = ethBnbProfile.getBnb().name();
-        Wallet binanceWallet = wallets.getWalletBySymbol(ethBnbProfile.getBnb());
+        EthDapsProfile ethDapsProfile = profileStorage.getProfileByEthSymbol(swapEntry.getLinkEntry().getSymbol());
+        String bnbTestSymbol = ethDapsProfile.getTransferSymbol();
+        String bnbSymbol = ethDapsProfile.getDaps().name();
+        Wallet binanceWallet = wallets.getWalletBySymbol(ethDapsProfile.getDaps());
 
         Account account = binanceClient.getAccount(binanceWallet.getAddress());
         BigInteger bnbBalance = getBalance(account, bnbTestSymbol);
@@ -86,7 +87,7 @@ public class Bep2WishSender implements Sender {
             ));
             return;
         }
-        String transferSymbol = ethBnbProfile.getTransferSymbol();
+        String transferSymbol = ethDapsProfile.getTransferSymbol();
         BigInteger coinBalance = getBalance(account, transferSymbol);
         if (coinBalance.equals(BigInteger.ZERO)) {
             return;
@@ -95,7 +96,7 @@ public class Bep2WishSender implements Sender {
         if (coinBalance.compareTo(swapEntry.getAmount()) < 0) {
             eventPublisher.publish(new LowBalanceEvent(
                     transferSymbol,
-                    ethBnbProfile.getBnb().getDecimals(),
+                    ethDapsProfile.getDaps().getDecimals(),
                     swapEntry,
                     swapEntry.getAmount(),
                     coinBalance,
@@ -104,13 +105,13 @@ public class Bep2WishSender implements Sender {
             return;
         }
 
-        EthToBnbLinkEntry link = swapEntry.getLinkEntry();
+        EthToDapsConnectEntry link = swapEntry.getLinkEntry();
         try {
             List<TransactionMetadata> results = transfer(
                     link.getEthAddress(),
                     link.getBnbAddress(),
                     swapEntry.getAmount(),
-                    ethBnbProfile.getBnb().getDecimals(),
+                    ethDapsProfile.getDaps().getDecimals(),
                     binanceWallet,
                     transferSymbol
             );
@@ -130,16 +131,16 @@ public class Bep2WishSender implements Sender {
 
             eventPublisher.publish(new TokensTransferredEvent(
                     transferSymbol,
-                    ethBnbProfile.getBnb().getDecimals(),
+                    ethDapsProfile.getDaps().getDecimals(),
                     swapEntry,
                     binanceWallet.getAddress()
             ));
         } catch (Exception e) {
-            log.error("Error when transferring BEP-2 {}.", ethBnbProfile.getEth().name(), e);
+            log.error("Error when transferring BEP-2 {}.", ethDapsProfile.getEth().name(), e);
 
             eventPublisher.publish(new TokensTransferErrorEvent(
                     transferSymbol,
-                    ethBnbProfile.getBnb().getDecimals(),
+                    ethDapsProfile.getDaps().getDecimals(),
                     swapEntry
             ));
         }
@@ -195,4 +196,5 @@ public class Bep2WishSender implements Sender {
                 .findFirst()
                 .orElse(BigInteger.ZERO);
     }
+     */
 }

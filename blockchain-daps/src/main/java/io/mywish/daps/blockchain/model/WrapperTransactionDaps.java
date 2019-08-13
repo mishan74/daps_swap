@@ -9,10 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class WrapperTransactionBinance extends WrapperTransaction {
+public class WrapperTransactionDaps extends WrapperTransaction {
     private final Transaction transaction;
 
-    public WrapperTransactionBinance(String hash, List<WrapperOutput> outputs, Transaction transaction) {
+    public WrapperTransactionDaps(String hash, List<WrapperOutput> outputs, Transaction transaction) {
         super(hash, new ArrayList<>(), outputs, false);
         this.transaction = transaction;
     }

@@ -2,8 +2,6 @@ package io.lastwill.eventscan.model;
 
 import lombok.Getter;
 
-import java.util.EnumSet;
-
 @Getter
 public enum NetworkType {
     ETHEREUM_MAINNET(NetworkProviderType.WEB3),

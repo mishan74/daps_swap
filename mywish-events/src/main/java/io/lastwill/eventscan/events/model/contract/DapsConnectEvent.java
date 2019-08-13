@@ -5,13 +5,13 @@ import io.mywish.blockchain.ContractEventDefinition;
 import lombok.Getter;
 
 @Getter
-public class BnbWishPutEvent extends ContractEvent {
+public class DapsConnectEvent extends ContractEvent {
     private final String eth;
-    private final String bnb;
+    private final String daps;
 
-    public BnbWishPutEvent(final ContractEventDefinition definition, String eth, String bnb, String address) {
+    public DapsConnectEvent(final ContractEventDefinition definition, String eth, String daps, String address) {
         super(definition, address);
         this.eth = eth;
-        this.bnb = bnb;
+        this.daps = daps;
     }
 }

@@ -1,15 +1,12 @@
 package io.mywish.scanner.services;
 
-import io.mywish.scanner.model.NewPendingTransactionsEvent;
 import io.mywish.blockchain.WrapperBlock;
 import io.mywish.blockchain.WrapperNetwork;
-import io.mywish.blockchain.WrapperTransaction;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
@@ -44,8 +41,7 @@ public abstract class ScannerPolling extends Scanner {
                 long interval = System.currentTimeMillis() - lastBlockIncrementTimestamp;
                 if (interval > WARN_INTERVAL) {
                     log.warn("{}: there is no block from {} ms!", network.getType(), interval);
-                }
-                else if (interval > INFO_INTERVAL) {
+                } else if (interval > INFO_INTERVAL) {
                     log.info("{}: there is no block from {} ms.", network.getType(), interval);
                 }
 
@@ -54,17 +50,14 @@ public abstract class ScannerPolling extends Scanner {
                 synchronized (sync) {
                     sync.wait(pollingInterval);
                 }
-            }
-            catch (InterruptedException e) {
+            } catch (InterruptedException e) {
                 log.warn("{}: polling cycle was interrupted.", network.getType(), e);
                 break;
-            }
-            catch (Throwable e) {
+            } catch (Throwable e) {
                 log.error("{}: exception handled in polling cycle. Continue.", network.getType(), e);
                 try {
                     Thread.sleep(pollingInterval);
-                }
-                catch (InterruptedException e1) {
+                } catch (InterruptedException e1) {
                     log.warn("{}: polling cycle was interrupted after error.", network.getType(), e1);
                     break;
                 }
@@ -112,8 +105,7 @@ public abstract class ScannerPolling extends Scanner {
                 nextBlockNo = lastBlockNo - commitmentChainLength;
             }
             log.info("{} RPC: latest block is {} but next is {}.", network.getType(), lastBlockNo, nextBlockNo);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error("{} sending failed.", network.getType());
             throw e;
         }
@@ -124,8 +116,7 @@ public abstract class ScannerPolling extends Scanner {
     protected void close() {
         try {
             lastBlockPersister.close();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.warn("Persister for {} closing failed.", network.getType(), e);
         }
         isTerminated.set(true);

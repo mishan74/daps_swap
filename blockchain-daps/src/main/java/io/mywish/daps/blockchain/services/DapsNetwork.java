@@ -15,7 +15,6 @@ import java.math.BigInteger;
 public class DapsNetwork extends WrapperNetwork {
     final private BtcdClient dapsClient;
 
-
     @Autowired
     private WrapperBlockDapsService blockBuilder;
 

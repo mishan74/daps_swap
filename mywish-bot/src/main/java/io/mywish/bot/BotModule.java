@@ -32,7 +32,7 @@ public class BotModule {
     }
 
     @ConditionalOnProperty(name = "io.mywish.is-ros-com-nadzor", havingValue = "false", matchIfMissing = true)
-    @Bean
+//    @Bean
     public MyWishBot myWishBot() {
         DefaultBotOptions botOptions = ApiContext.getInstance(DefaultBotOptions.class);
         if (proxy != null) {

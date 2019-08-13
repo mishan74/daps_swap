@@ -7,11 +7,13 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "eth_bnb_swap_link_entry",
-uniqueConstraints = {@UniqueConstraint(columnNames = {"symbol", "eth_address"})})
+@Table(
+        name = "eth_daps_swap_connect_entry",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"symbol", "eth_address"})}
+)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class EthToBnbLinkEntry{
+public class EthToDapsConnectEntry {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,17 +21,15 @@ public class EthToBnbLinkEntry{
     @Column(nullable = false)
     private String symbol;
 
-    @Column(nullable = false,
-    name = "eth_address")
+    @Column(nullable = false, name = "eth_address")
     private String ethAddress;
 
-    @Column(nullable = false,
-    name = "bnb_address")
-    private String bnbAddress;
+    @Column(nullable = false, name = "daps_address")
+    private String dapsAddress;
 
-    public EthToBnbLinkEntry(String symbol, String ethAddress, String bnbAddress) {
+    public EthToDapsConnectEntry(String symbol, String ethAddress, String dapsAddress) {
         this.symbol = symbol;
         this.ethAddress = ethAddress;
-        this.bnbAddress = bnbAddress;
+        this.dapsAddress = dapsAddress;
     }
 }

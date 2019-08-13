@@ -4,11 +4,8 @@ import lombok.Getter;
 
 @Getter
 public enum CryptoCurrency {
-    ETH(18),
-    WISH(18),
-    BBNB(8),
-    BWISH(8),
-    USD(6, "$");
+    ETH_DAPS(18), // todo: check real decimals
+    DAPS(8); // todo: check real decimals
 
     private final int decimals;
     private final String symbol;

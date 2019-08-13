@@ -1,12 +1,12 @@
 package io.mywish.bot.integration.services;
 
+import io.lastwill.eventscan.events.model.dapsswap.LowBalanceEvent;
+import io.lastwill.eventscan.events.model.dapsswap.TokensBurnedEvent;
+import io.lastwill.eventscan.events.model.dapsswap.TokensTransferErrorEvent;
+import io.lastwill.eventscan.events.model.dapsswap.TokensTransferredEvent;
 import io.lastwill.eventscan.events.model.utility.NetworkStuckEvent;
-import io.lastwill.eventscan.events.model.utility.PendingStuckEvent;
-import io.lastwill.eventscan.events.model.wishbnbswap.LowBalanceEvent;
-import io.lastwill.eventscan.events.model.wishbnbswap.TokensBurnedEvent;
-import io.lastwill.eventscan.events.model.wishbnbswap.TokensTransferErrorEvent;
-import io.lastwill.eventscan.events.model.wishbnbswap.TokensTransferredEvent;
-import io.lastwill.eventscan.model.*;
+import io.lastwill.eventscan.model.CryptoCurrency;
+import io.lastwill.eventscan.model.NetworkType;
 import io.mywish.bot.service.MyWishBot;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,12 +43,12 @@ public class BotIntegration {
 
     @EventListener
     private void onWishSwapLowBalance(final LowBalanceEvent event) {
-        Long linkId = event.getSwapEntry().getLinkEntry().getId();
+        Long connectId = event.getSwapEntry().getLinkEntry().getId();
         Long swapId = event.getSwapEntry().getId();
         String fromAddress = event.getFromAddress();
         String fromAddressLink = explorerProvider.getOrStub(NetworkType.DAPS_MAINNET)
                 .buildToAddress(fromAddress);
-        String toAddress = event.getSwapEntry().getLinkEntry().getBnbAddress();
+        String toAddress = event.getSwapEntry().getLinkEntry().getDapsAddress();
         String toAddressLink = explorerProvider.getOrStub(NetworkType.DAPS_MAINNET)
                 .buildToAddress(toAddress);
         String ethAddress = event.getSwapEntry().getLinkEntry().getEthAddress();
@@ -57,7 +57,7 @@ public class BotIntegration {
         String need = toCurrency(event.getCoin(), event.getDecimals(), event.getNeed());
         String have = toCurrency(event.getCoin(), event.getDecimals(), event.getHave());
 
-        bot.onWishSwapLowBalance(linkId, swapId, fromAddress, fromAddressLink, toAddress, toAddressLink, ethAddress, ethAddressLink, need, have);
+        bot.onWishSwapLowBalance(connectId, swapId, fromAddress, fromAddressLink, toAddress, toAddressLink, ethAddress, ethAddressLink, need, have);
     }
 
     @EventListener
@@ -67,8 +67,8 @@ public class BotIntegration {
         String ethAddress = event.getEthAddress();
         String ethAddressLink = explorerProvider.getOrStub(NetworkType.ETHEREUM_MAINNET)
                 .buildToAddress(ethAddress);
-        String bnbAddress = event.getBnbAddress() != null ? event.getBnbAddress() : "not linked";
-        String bnbAddressLink = event.getBnbAddress() != null
+        String bnbAddress = event.getDapsAddress() != null ? event.getDapsAddress() : "not connected";
+        String bnbAddressLink = event.getDapsAddress() != null
                 ? explorerProvider.getOrStub(NetworkType.DAPS_MAINNET).buildToAddress(bnbAddress)
                 : "";
         String amount = toCurrency(event.getCoin(), event.getDecimals(), event.getSwapEntry().getAmount());
@@ -82,11 +82,11 @@ public class BotIntegration {
         Long linkId = event.getEthEntry().getLinkEntry().getId();
         Long swapId = event.getEthEntry().getId();
         String amount = toCurrency(event.getCoin(), event.getDecimals(), event.getEthEntry().getAmount());
-        String bnbTxHash = event.getEthEntry().getBnbTxHash();
+        String bnbTxHash = event.getEthEntry().getDapsTxHash();
         String bnbTxHashLink = bnbTxHash != null
                 ? explorerProvider.getOrStub(NetworkType.DAPS_MAINNET).buildToTransaction(bnbTxHash)
                 : "";
-        String bnbAddress = event.getEthEntry().getLinkEntry().getBnbAddress();
+        String bnbAddress = event.getEthEntry().getLinkEntry().getDapsAddress();
         String bnbAddressLink = bnbAddress != null
                 ? explorerProvider.getOrStub(NetworkType.DAPS_MAINNET).buildToAddress(bnbAddress)
                 : "";
@@ -103,8 +103,8 @@ public class BotIntegration {
         Long swapId = event.getEthEntry().getId();
         String amount = toCurrency(event.getCoin(), event.getDecimals(), event.getEthEntry().getAmount());
         String transferTxLink = explorerProvider.getOrStub(NetworkType.DAPS_MAINNET)
-                .buildToTransaction(event.getEthEntry().getBnbTxHash());
-        String bnbAddress = event.getEthEntry().getLinkEntry().getBnbAddress();
+                .buildToTransaction(event.getEthEntry().getDapsTxHash());
+        String bnbAddress = event.getEthEntry().getLinkEntry().getDapsAddress();
         String bnbAddressLink = explorerProvider.getOrStub(NetworkType.DAPS_MAINNET)
                 .buildToAddress(bnbAddress);
         String ethAddress = event.getEthEntry().getLinkEntry().getEthAddress();
@@ -124,15 +124,6 @@ public class BotIntegration {
                 .buildToBlock(event.getLastBlockNo());
         bot.sendToAllWithMarkdown("Network " + network + " *stuck!* Last block was at " + lastBlock + " [" + event.getLastBlockNo() + "](" + blockLink + ").");
     }
-
-    @EventListener
-    private void onPendingStuck(final PendingStuckEvent event) {
-        final String network = networkName.getOrDefault(event.getNetworkType(), defaultNetwork);
-        String lastBlock = formatToLocal(event.getReceivedTime());
-        bot.sendToAllWithMarkdown("*No pending transactions* for the network " + network + "! Last pending was at " + lastBlock + ", count: " + event.getCount() + ".");
-    }
-
-
 
     private static String toCurrency(CryptoCurrency currency, BigInteger amount) {
         return toCurrency(currency.toString(), currency.getDecimals(), amount);

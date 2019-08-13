@@ -3,7 +3,6 @@ package io.mywish.web3.blockchain;
 import io.lastwill.eventscan.model.NetworkType;
 import io.lastwill.eventscan.repositories.LastBlockRepository;
 import io.mywish.scanner.services.LastBlockDbPersister;
-import io.mywish.scanner.services.LastBlockFilePersister;
 import io.mywish.scanner.services.LastBlockPersister;
 import io.mywish.web3.blockchain.parity.Web3jEx;
 import io.mywish.web3.blockchain.service.Web3Network;
@@ -25,37 +24,18 @@ public class Web3BCModule {
     @Bean(name = NetworkType.ETHEREUM_MAINNET_VALUE)
     public Web3Network ethNetMain(
             OkHttpClient client,
-            @Value("${io.lastwill.eventscan.web3-url.ethereum}") String web3Url,
-            @Value("${etherscanner.pending-transactions-threshold}") int pendingThreshold) {
+            @Value("${io.lastwill.eventscan.web3-url.ethereum}") String web3Url) {
         return new Web3Network(
                 NetworkType.ETHEREUM_MAINNET,
-                Web3jEx.build(new HttpService(web3Url, client, false)),
-                pendingThreshold);
+                Web3jEx.build(new HttpService(web3Url, client, false))
+        );
     }
 
-
-    @Configuration
-    @ConditionalOnProperty("etherscanner.ethereum.db-persister")
-    public class EthDbPersisterConfiguration {
-        @Bean
-        public LastBlockPersister ethMainnetLastBlockPersister(
-                LastBlockRepository lastBlockRepository
-        ) {
-            return new LastBlockDbPersister(NetworkType.ETHEREUM_MAINNET, lastBlockRepository, null);
-        }
-
-    }
-
-    @Configuration
-    @ConditionalOnProperty(value = "etherscanner.ethereum.db-persister", havingValue = "false", matchIfMissing = true)
-    public class EthFilePersisterConfiguration {
-        @Bean
-        public LastBlockPersister ethMainnetLastBlockPersister(
-                final @Value("${etherscanner.start-block-dir}") String dir
-        ) {
-            return new LastBlockFilePersister(NetworkType.ETHEREUM_MAINNET, dir, null);
-        }
-
+    @Bean
+    public LastBlockPersister ethMainnetLastBlockPersister(
+            LastBlockRepository lastBlockRepository
+    ) {
+        return new LastBlockDbPersister(NetworkType.ETHEREUM_MAINNET, lastBlockRepository, null);
     }
 
     @ConditionalOnBean(name = NetworkType.ETHEREUM_MAINNET_VALUE)

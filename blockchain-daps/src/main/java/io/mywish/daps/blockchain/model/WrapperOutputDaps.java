@@ -7,12 +7,12 @@ import lombok.Getter;
 import java.math.BigInteger;
 
 @Getter
-public class WrapperOutputBinance extends WrapperOutput {
+public class WrapperOutputDaps extends WrapperOutput {
     private final String from;
     private final String symbol;
     private final String memo;
 
-    public WrapperOutputBinance(Transaction tx, String from, String to, String symbol, String amount) {
+    public WrapperOutputDaps(Transaction tx, String from, String to, String symbol, String amount) {
         super(tx.getHash(), 0, to, new BigInteger(amount), new byte[0]);
         this.from = from;
         this.symbol = symbol;

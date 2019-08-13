@@ -1,20 +1,20 @@
-package io.lastwill.eventscan.events.model.wishbnbswap;
+package io.lastwill.eventscan.events.model.dapsswap;
 
 import io.lastwill.eventscan.events.model.BaseEvent;
 import io.lastwill.eventscan.model.NetworkType;
-import io.lastwill.eventscan.model.EthToBnbSwapEntry;
+import io.lastwill.eventscan.model.EthToDapsSwapEntry;
 import lombok.Getter;
 
 @Getter
 public class TokensTransferErrorEvent extends BaseEvent {
     private final String coin;
     private final int decimals;
-    private final EthToBnbSwapEntry ethEntry;
+    private final EthToDapsSwapEntry ethEntry;
 
     public TokensTransferErrorEvent(
             String coin,
             int decimals,
-            EthToBnbSwapEntry ethEntry
+            EthToDapsSwapEntry ethEntry
     ) {
         super(NetworkType.ETHEREUM_MAINNET);
         this.coin = coin;

@@ -59,18 +59,12 @@ public class DapsBCModule {
         );
     }
 
-
-
-    @Configuration
-    @ConditionalOnProperty("etherscanner.daps.db-persister")
-    public class DbPersisterConfiguration {
-        @Bean
-        public LastBlockPersister dapsMainnetLastBlockPersister(
-                LastBlockRepository lastBlockRepository,
-                final @Value("${etherscanner.daps.last-block.mainnet:#{null}}") Long lastBlock
-        ) {
-            return new LastBlockDbPersister(NetworkType.DAPS_MAINNET, lastBlockRepository, lastBlock);
-        }
+    @Bean
+    public LastBlockPersister dapsMainnetLastBlockPersister(
+            LastBlockRepository lastBlockRepository,
+            final @Value("${etherscanner.daps.last-block.mainnet:#{null}}") Long lastBlock
+    ) {
+        return new LastBlockDbPersister(NetworkType.DAPS_MAINNET, lastBlockRepository, lastBlock);
     }
 
     @ConditionalOnBean(name = NetworkType.DAPS_MAINNET_VALUE)

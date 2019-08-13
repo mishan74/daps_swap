@@ -10,7 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.time.*;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +45,6 @@ public class BotCommandNetworks implements BotCommand {
     public void execute(ChatContext context, List<String> args) {
         List<String> messages = new ArrayList<>();
         Map<NetworkType, NetworkStuckMonitor.LastEvent> lastEvents = networkStuckMonitor.getLastBlockEvents();
-        Map<NetworkType, NetworkStuckMonitor.LastEvent> lastPendingTxEvents = networkStuckMonitor.getLastPendingTxEvents();
         for (NetworkType network : NetworkType.values()) {
             NetworkStuckMonitor.LastEvent lastEvent = lastEvents.get(network);
             if (lastEvent == null) {
@@ -54,24 +56,14 @@ public class BotCommandNetworks implements BotCommand {
             String blockTimeStr = "\n\tBlock time: " +
                     ZonedDateTime.ofInstant(lastEvent.getTimestamp(), zone).format(dateFormatter);
 
-            String lastPendingTime = null;
-            if (lastPendingTxEvents.containsKey(network)) {
-                NetworkStuckMonitor.LastEvent lastPendingEvent = lastPendingTxEvents.get(network);
-                lastPendingTime = formatToLocal(lastPendingEvent.getReceivedTime());
-            }
-            String pendingTimeStr = lastPendingTime != null
-                    ? "\n\tPending time: " + lastPendingTime
-                    : "";
-
             double speed = networkSpeedMonitor.getSpeed(network, TimeUnit.MINUTES);
             String speedStr = String.format("\n\tSpeed: %.2f blocks/minute (%.2f m)",
-                    speed, (double) speedInterval / 1000 / 60 );
+                    speed, (double) speedInterval / 1000 / 60);
 
             messages.add(network.name() +
                     lastBlockStr +
                     receivedTimeStr +
                     blockTimeStr +
-                    pendingTimeStr +
                     speedStr
             );
         }

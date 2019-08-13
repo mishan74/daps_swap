@@ -10,7 +10,6 @@ public abstract class WrapperWallet {
     private Wallet wallet;
     private CryptoCurrency symbol;
 
-
     public WrapperWallet(CryptoCurrency symbol, String privateKey, BinanceDexEnvironment env) {
         this.wallet = new Wallet(privateKey, env);
         this.symbol = symbol;

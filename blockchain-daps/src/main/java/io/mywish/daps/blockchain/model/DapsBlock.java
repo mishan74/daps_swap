@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class BinanceBlock {
+public class DapsBlock {
     private final BlockMeta blockMeta;
     private final List<Transaction> transactions;
 }

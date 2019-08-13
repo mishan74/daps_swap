@@ -1,8 +1,8 @@
-package io.lastwill.eventscan.events.model.wishbnbswap;
+package io.lastwill.eventscan.events.model.dapsswap;
 
 import io.lastwill.eventscan.events.model.BaseEvent;
+import io.lastwill.eventscan.model.EthToDapsSwapEntry;
 import io.lastwill.eventscan.model.NetworkType;
-import io.lastwill.eventscan.model.EthToBnbSwapEntry;
 import lombok.Getter;
 
 import java.math.BigInteger;
@@ -11,12 +11,12 @@ import java.math.BigInteger;
 public class LowBalanceEvent extends BaseEvent {
     private final String coin;
     private final int decimals;
-    private final EthToBnbSwapEntry swapEntry;
+    private final EthToDapsSwapEntry swapEntry;
     private final BigInteger need;
     private final BigInteger have;
     private final String fromAddress;
 
-    public LowBalanceEvent(String coin, int decimals, EthToBnbSwapEntry swapEntry, BigInteger need, BigInteger have, String fromAddress) {
+    public LowBalanceEvent(String coin, int decimals, EthToDapsSwapEntry swapEntry, BigInteger need, BigInteger have, String fromAddress) {
         super(NetworkType.DAPS_MAINNET);
         this.coin = coin;
         this.decimals = decimals;

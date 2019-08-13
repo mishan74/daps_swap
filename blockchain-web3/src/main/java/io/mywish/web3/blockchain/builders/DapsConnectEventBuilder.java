@@ -1,6 +1,6 @@
 package io.mywish.web3.blockchain.builders;
 
-import io.lastwill.eventscan.events.model.contract.BnbWishPutEvent;
+import io.lastwill.eventscan.events.model.contract.DapsConnectEvent;
 import io.mywish.web3.blockchain.model.Web3ContractEventDefinition;
 import io.mywish.web3.blockchain.model.WrapperType;
 import lombok.Getter;
@@ -17,9 +17,9 @@ import java.util.List;
 @Getter
 @Component
 @NoArgsConstructor
-public class BnbWishPutEventBuilder extends Web3ContractEventBuilder<BnbWishPutEvent> {
+public class DapsConnectEventBuilder extends Web3ContractEventBuilder<DapsConnectEvent> {
     private final Web3ContractEventDefinition definition = new Web3ContractEventDefinition(
-            "Put",
+            "Connect",
             Arrays.asList(
                     WrapperType.create(Address.class, true),
                     WrapperType.create(Utf8String.class, true)
@@ -27,8 +27,8 @@ public class BnbWishPutEventBuilder extends Web3ContractEventBuilder<BnbWishPutE
     );
 
     @Override
-    public BnbWishPutEvent build(String address, List<Object> values) {
-        return new BnbWishPutEvent(
+    public DapsConnectEvent build(String address, List<Object> values) {
+        return new DapsConnectEvent(
                 definition,
                 (String) values.get(0),
                 TypeEncoder.encode(new Bytes32((byte[]) values.get(1))),
