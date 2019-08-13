@@ -3,13 +3,13 @@ package io.mywish.daps.blockchain;
 import com.neemre.btcdcli4j.core.client.BtcdClientImpl;
 import io.lastwill.eventscan.model.NetworkType;
 import io.lastwill.eventscan.repositories.LastBlockRepository;
+import io.mywish.daps.blockchain.model.params.DapsMainNetParams;
+import io.mywish.daps.blockchain.model.params.DapsTestNetParams;
 import io.mywish.daps.blockchain.services.DapsNetwork;
 import io.mywish.daps.blockchain.services.DapsScanner;
 import io.mywish.scanner.services.LastBlockDbPersister;
 import io.mywish.scanner.services.LastBlockPersister;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.bitcoinj.params.MainNetParams;
-import org.bitcoinj.params.TestNet3Params;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -55,7 +55,7 @@ public class DapsBCModule {
                         user,
                         password
                 ),
-                treatTestnetAsMainnet ? new TestNet3Params() : new MainNetParams()
+                treatTestnetAsMainnet ? new DapsTestNetParams() : new DapsMainNetParams()
         );
     }
 
