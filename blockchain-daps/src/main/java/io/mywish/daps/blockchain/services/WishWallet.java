@@ -6,7 +6,7 @@ import io.mywish.daps.blockchain.model.WrapperWallet;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class WishWallet extends WrapperWallet {
 
     public WishWallet(@Value("${io.lastwill.eventscan.binance.wish-swap.wallet-pk}") String privateKey,
