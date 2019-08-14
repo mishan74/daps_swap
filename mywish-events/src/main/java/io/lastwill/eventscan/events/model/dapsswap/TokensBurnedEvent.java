@@ -2,21 +2,21 @@ package io.lastwill.eventscan.events.model.dapsswap;
 
 import io.lastwill.eventscan.events.model.BaseEvent;
 import io.lastwill.eventscan.model.NetworkType;
-import io.lastwill.eventscan.model.EthToDapsSwapEntry;
+import io.lastwill.eventscan.model.EthToDapsTransitionEntry;
 import lombok.Getter;
 
 @Getter
 public class TokensBurnedEvent extends BaseEvent {
     private final String coin;
     private final int decimals;
-    private final EthToDapsSwapEntry swapEntry;
+    private final EthToDapsTransitionEntry swapEntry;
     private final String ethAddress;
     private final String dapsAddress;
 
     public TokensBurnedEvent(
             String coin,
             int decimals,
-            EthToDapsSwapEntry swapEntry,
+            EthToDapsTransitionEntry swapEntry,
             String ethAddress,
             String dapsAddress
     ) {

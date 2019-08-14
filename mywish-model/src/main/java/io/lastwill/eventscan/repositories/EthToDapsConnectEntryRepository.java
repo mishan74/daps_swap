@@ -5,7 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 public interface EthToDapsConnectEntryRepository extends CrudRepository<EthToDapsConnectEntry, Long> {
-    boolean existsByEthAddressAndSymbol(@Param("ethAddress") String ethAddress, @Param("symbol") String symbol);
+    boolean existsByConnectTxHash(@Param("connectTxHash") String txHash);
 
-    EthToDapsConnectEntry findByEthAddress(@Param("ethAddress") String ethAddress);
+    EthToDapsConnectEntry findFirstByEthAddressOrderByIdDesc(@Param("ethAddress") String ethAddress);
 }

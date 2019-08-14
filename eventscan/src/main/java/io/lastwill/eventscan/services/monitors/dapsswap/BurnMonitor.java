@@ -1,39 +1,31 @@
 package io.lastwill.eventscan.services.monitors.dapsswap;
 
-import io.lastwill.eventscan.events.model.contract.erc20.TransferEvent;
-import io.lastwill.eventscan.events.model.dapsswap.TokensBurnedEvent;
-import io.lastwill.eventscan.model.*;
-import io.lastwill.eventscan.repositories.EthToDapsSwapEntryRepository;
-import io.lastwill.eventscan.repositories.EthToDapsConnectEntryRepository;
-import io.lastwill.eventscan.services.TransactionProvider;
-import io.mywish.blockchain.WrapperTransaction;
-import io.mywish.scanner.model.NewBlockEvent;
-import io.mywish.scanner.services.EventPublisher;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.event.EventListener;
-
-import java.math.BigInteger;
-import java.util.*;
-import java.util.stream.Collectors;
+import org.springframework.stereotype.Component;
 
 @Slf4j
-//@Component
+@Component
 public class BurnMonitor {
+    /*
     @Autowired
     private EventPublisher eventPublisher;
-
     @Autowired
     private TransactionProvider transactionProvider;
-
     @Autowired
     private EthToDapsConnectEntryRepository connectRepository;
-
     @Autowired
     private EthToDapsSwapEntryRepository swapRepository;
-
     @Autowired
-    private ProfileStorage profileStorage;
+    private DapsSender dapsSender;
+
+    @Value("${io.lastwill.eventscan.daps-transition.linker-address}")
+    private String connectorAddress;
+    @Value("${io.lastwill.eventscan.daps-transition.burner-address}")
+    private String burnerAddress;
+    @Value("${io.lastwill.eventscan.contract.token-address.daps}")
+    private String ethTokenAddress;
+    @Value("${io.lastwill.eventscan.daps.token-symbol}")
+    private String transferSymbol;
 
     @EventListener
     public void onBurn(final NewBlockEvent newBlockEvent) {
@@ -89,7 +81,7 @@ public class BurnMonitor {
                     BigInteger amount = convertEthToDaps(transferEvent.getTokens(), profile);
                     String dapsAddress = null;
 
-                    EthToDapsConnectEntry connectEntry = connectRepository.findByEthAddress(ethAddress);
+                    EthToDapsConnectEntry connectEntry = connectRepository.findFirstByEthAddressOrderByIdDesc(ethAddress);
                     if (connectEntry != null) {
                         dapsAddress = connectEntry.getDapsAddress();
                     } else {
@@ -138,4 +130,5 @@ public class BurnMonitor {
                 .multiply(BigInteger.TEN.pow(dapsDecimals))
                 .divide(BigInteger.TEN.pow(ethDapsDecimals));
     }
+     */
 }

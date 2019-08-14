@@ -1,6 +1,6 @@
 package io.mywish.web3.blockchain.builders;
 
-import io.lastwill.eventscan.events.model.contract.DapsReconnectEvent;
+import io.lastwill.eventscan.events.model.contract.swap.DapsReconnectEvent;
 import io.mywish.web3.blockchain.model.Web3ContractEventDefinition;
 import io.mywish.web3.blockchain.model.WrapperType;
 import lombok.Getter;

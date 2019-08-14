@@ -9,16 +9,16 @@ import javax.persistence.*;
 import java.math.BigInteger;
 
 @Entity
-@Table(name = "eth_daps_swap_swap_entry")
+@Table(name = "eth_to_daps_transition")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class EthToDapsSwapEntry {
+public class EthToDapsTransitionEntry {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(optional = false)
-    private EthToDapsConnectEntry linkEntry;
+    private EthToDapsConnectEntry connectEntry;
 
     private BigInteger amount;
 
@@ -34,8 +34,8 @@ public class EthToDapsSwapEntry {
     @Enumerated(EnumType.STRING)
     private TransferStatus transferStatus;
 
-    public EthToDapsSwapEntry(EthToDapsConnectEntry linkEntry, BigInteger amount, String ethTxHash) {
-        this.linkEntry = linkEntry;
+    public EthToDapsTransitionEntry(EthToDapsConnectEntry connectEntry, BigInteger amount, String ethTxHash) {
+        this.connectEntry = connectEntry;
         this.amount = amount;
         this.ethTxHash = ethTxHash;
     }

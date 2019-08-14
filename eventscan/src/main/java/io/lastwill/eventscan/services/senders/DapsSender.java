@@ -1,32 +1,14 @@
 package io.lastwill.eventscan.services.senders;
 
-import com.binance.dex.api.client.BinanceDexApiNodeClient;
-import com.binance.dex.api.client.BinanceDexConstants;
-import com.binance.dex.api.client.Wallet;
-import com.binance.dex.api.client.domain.Account;
-import com.binance.dex.api.client.domain.Balance;
-import com.binance.dex.api.client.domain.TransactionMetadata;
-import com.binance.dex.api.client.domain.broadcast.TransactionOption;
-import com.binance.dex.api.client.domain.broadcast.Transfer;
-import io.lastwill.eventscan.events.model.dapsswap.*;
 import io.lastwill.eventscan.model.*;
-import io.lastwill.eventscan.repositories.EthToDapsSwapEntryRepository;
-import io.mywish.daps.blockchain.services.Wallets;
-import io.mywish.scanner.services.EventPublisher;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 @Slf4j
 @Component
@@ -49,7 +31,7 @@ public class DapsSender implements Sender {
 */
 
     @Override
-    public void send(EthToDapsSwapEntry swapEntry) {
+    public void send(EthToDapsTransitionEntry swapEntry) {
         /*
         if (swapEntry.getLinkEntry() == null) {
             return;

@@ -43,15 +43,15 @@ public class BotIntegration {
 
     @EventListener
     private void onWishSwapLowBalance(final LowBalanceEvent event) {
-        Long connectId = event.getSwapEntry().getLinkEntry().getId();
+        Long connectId = event.getSwapEntry().getConnectEntry().getId();
         Long swapId = event.getSwapEntry().getId();
         String fromAddress = event.getFromAddress();
         String fromAddressLink = explorerProvider.getOrStub(NetworkType.DAPS_MAINNET)
                 .buildToAddress(fromAddress);
-        String toAddress = event.getSwapEntry().getLinkEntry().getDapsAddress();
+        String toAddress = event.getSwapEntry().getConnectEntry().getDapsAddress();
         String toAddressLink = explorerProvider.getOrStub(NetworkType.DAPS_MAINNET)
                 .buildToAddress(toAddress);
-        String ethAddress = event.getSwapEntry().getLinkEntry().getEthAddress();
+        String ethAddress = event.getSwapEntry().getConnectEntry().getEthAddress();
         String ethAddressLink = explorerProvider.getOrStub(NetworkType.ETHEREUM_MAINNET)
                 .buildToAddress(ethAddress);
         String need = toCurrency(event.getCoin(), event.getDecimals(), event.getNeed());
@@ -62,7 +62,7 @@ public class BotIntegration {
 
     @EventListener
     private void onWishSwapBurn(final TokensBurnedEvent event) {
-        Long linkId = event.getSwapEntry().getLinkEntry().getId();
+        Long linkId = event.getSwapEntry().getConnectEntry().getId();
         Long swapId = event.getSwapEntry().getId();
         String ethAddress = event.getEthAddress();
         String ethAddressLink = explorerProvider.getOrStub(NetworkType.ETHEREUM_MAINNET)
@@ -79,18 +79,18 @@ public class BotIntegration {
 
     @EventListener
     private void onWishSwapTransferError(final TokensTransferErrorEvent event) {
-        Long linkId = event.getEthEntry().getLinkEntry().getId();
+        Long linkId = event.getEthEntry().getConnectEntry().getId();
         Long swapId = event.getEthEntry().getId();
         String amount = toCurrency(event.getCoin(), event.getDecimals(), event.getEthEntry().getAmount());
         String bnbTxHash = event.getEthEntry().getDapsTxHash();
         String bnbTxHashLink = bnbTxHash != null
                 ? explorerProvider.getOrStub(NetworkType.DAPS_MAINNET).buildToTransaction(bnbTxHash)
                 : "";
-        String bnbAddress = event.getEthEntry().getLinkEntry().getDapsAddress();
+        String bnbAddress = event.getEthEntry().getConnectEntry().getDapsAddress();
         String bnbAddressLink = bnbAddress != null
                 ? explorerProvider.getOrStub(NetworkType.DAPS_MAINNET).buildToAddress(bnbAddress)
                 : "";
-        String ethAddress = event.getEthEntry().getLinkEntry().getEthAddress();
+        String ethAddress = event.getEthEntry().getConnectEntry().getEthAddress();
         String ethAddressLink = ethAddress != null
                 ? explorerProvider.getOrStub(NetworkType.ETHEREUM_MAINNET).buildToAddress(ethAddress)
                 : "";
@@ -99,15 +99,15 @@ public class BotIntegration {
 
     @EventListener
     private void onWishSwapTransfer(final TokensTransferredEvent event) {
-        Long linkId = event.getEthEntry().getLinkEntry().getId();
+        Long linkId = event.getEthEntry().getConnectEntry().getId();
         Long swapId = event.getEthEntry().getId();
         String amount = toCurrency(event.getCoin(), event.getDecimals(), event.getEthEntry().getAmount());
         String transferTxLink = explorerProvider.getOrStub(NetworkType.DAPS_MAINNET)
                 .buildToTransaction(event.getEthEntry().getDapsTxHash());
-        String bnbAddress = event.getEthEntry().getLinkEntry().getDapsAddress();
+        String bnbAddress = event.getEthEntry().getConnectEntry().getDapsAddress();
         String bnbAddressLink = explorerProvider.getOrStub(NetworkType.DAPS_MAINNET)
                 .buildToAddress(bnbAddress);
-        String ethAddress = event.getEthEntry().getLinkEntry().getEthAddress();
+        String ethAddress = event.getEthEntry().getConnectEntry().getEthAddress();
         String ethAddressLink = explorerProvider.getOrStub(NetworkType.ETHEREUM_MAINNET)
                 .buildToAddress(ethAddress);
 
