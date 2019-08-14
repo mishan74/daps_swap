@@ -1,50 +1,30 @@
 package io.mywish.daps.blockchain.services;
 
+
+import com.neemre.btcdcli4j.core.domain.PaymentOverview;
+import com.neemre.btcdcli4j.core.domain.Transaction;
 import io.mywish.blockchain.WrapperOutput;
 import lombok.extern.slf4j.Slf4j;
-import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.ScriptException;
-import org.bitcoinj.core.Transaction;
-import org.bitcoinj.core.TransactionOutput;
-import org.bitcoinj.script.Script;
+
 import org.springframework.stereotype.Component;
 
-import java.math.BigInteger;
+import java.math.BigDecimal;
+
 
 @Component
 @Slf4j
-public class WrapperOutputDapsService {public WrapperOutput build(Transaction transaction, TransactionOutput output, NetworkParameters networkParameters) {
-    Script script;
-    try {
-        script = output.getScriptPubKey();
-    }
-    catch (ScriptException ex) {
-        log.warn("Skip output with script error: ", output, ex);
-        return null;
-    }
-    if (!script.isSentToAddress() && !script.isPayToScriptHash() && !script.isSentToRawPubKey()) {
-        log.debug("Skip output with not appropriate script {}.", script);
-        return null;
-    }
-    String address;
-    try {
-        address = output
-                .getScriptPubKey()
-                .getToAddress(networkParameters, true)
-                .toBase58();
+public class WrapperOutputDapsService {
+    public WrapperOutput build(Transaction transaction, PaymentOverview output) {
 
+        String address = output.getAddress();
+
+        return new WrapperOutput(
+                transaction.getTxId(),
+                output.getVOut(),
+                address,
+                output.getAmount().multiply(BigDecimal.TEN.pow(8)).toBigInteger(),
+                transaction.getHex().getBytes()
+        );
     }
-    catch (Exception e) {
-        log.error("Impossible to convert script {} to address.", output.getScriptPubKey(), e);
-        return null;
-    }
-    return new WrapperOutput(
-            transaction.getHashAsString(),
-            output.getIndex(),
-            address,
-            BigInteger.valueOf(output.getValue().getValue()),
-            output.getScriptBytes()
-    );
-}
 
 }

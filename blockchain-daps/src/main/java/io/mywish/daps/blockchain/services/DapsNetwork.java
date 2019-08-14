@@ -2,7 +2,6 @@ package io.mywish.daps.blockchain.services;
 
 import com.neemre.btcdcli4j.core.client.BtcdClient;
 import io.lastwill.eventscan.model.NetworkType;
-import io.mywish.daps.blockchain.helper.DapsBlockParser;
 import io.mywish.blockchain.WrapperBlock;
 import io.mywish.blockchain.WrapperNetwork;
 import io.mywish.blockchain.WrapperTransaction;
@@ -16,10 +15,10 @@ public class DapsNetwork extends WrapperNetwork {
     final private BtcdClient dapsClient;
 
     @Autowired
-    private WrapperBlockDapsService blockBuilder;
+    BtcdClient client;
 
     @Autowired
-    private DapsBlockParser dapsBlockParser;
+    private WrapperBlockDapsService blockBuilder;
 
     private final NetworkParameters networkParameters;
 
@@ -37,11 +36,7 @@ public class DapsNetwork extends WrapperNetwork {
     @Override
     public WrapperBlock getBlock(String hash) throws Exception {
         long height = dapsClient.getBlock(hash).getHeight();
-        return blockBuilder.build(
-                dapsBlockParser.parse(
-                        networkParameters,
-                        (String) dapsClient.getBlock(hash, false)
-                ),
+        return blockBuilder.build(client.getBlock(hash),
                 height,
                 networkParameters
         );

@@ -1,5 +1,7 @@
 package io.mywish.daps.blockchain.services;
 
+import com.neemre.btcdcli4j.core.client.BtcdClient;
+import com.neemre.btcdcli4j.core.domain.Transaction;
 import io.mywish.blockchain.WrapperOutput;
 import io.mywish.blockchain.WrapperTransaction;
 import lombok.extern.slf4j.Slf4j;
@@ -17,14 +19,17 @@ import java.util.stream.Collectors;
 public class WrapperTransactionDapsService {
 
     @Autowired
+    BtcdClient client;
+
+    @Autowired
     private WrapperOutputDapsService outputBuilder;
 
 
-    public WrapperTransaction build(org.bitcoinj.core.Transaction transaction, NetworkParameters networkParameters) {
-        String hash = transaction.getHashAsString();
+    public WrapperTransaction build(Transaction transaction, NetworkParameters networkParameters) {
+        String hash = transaction.getHex();
         List<String> inputs = new ArrayList<>();
-        List<WrapperOutput> outputs = transaction.getOutputs().stream()
-                .map(output -> outputBuilder.build(transaction, output, networkParameters))
+        List<WrapperOutput> outputs = transaction.getDetails().stream()
+                .map(output -> outputBuilder.build(transaction, output))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
         return new WrapperTransaction(
