@@ -125,22 +125,6 @@ public class DapsSender implements Sender {
          */
     }
 
-    @SuppressWarnings("BigDecimalMethodWithoutRoundingCalled")
-    public String toString(BigInteger bnbWishAmount, int decimals) {
-        BigDecimal bdAmount = new BigDecimal(bnbWishAmount)
-                .divide(BigDecimal.TEN.pow(decimals));
-
-        DecimalFormat df = new DecimalFormat();
-        df.setMaximumFractionDigits(decimals);
-        df.setMinimumFractionDigits(0);
-        df.setGroupingUsed(false);
-        DecimalFormatSymbols pointFormatSymbol = new DecimalFormatSymbols(Locale.getDefault());
-        pointFormatSymbol.setDecimalSeparator('.');
-        df.setDecimalFormatSymbols(pointFormatSymbol);
-
-        return df.format(bdAmount);
-    }
-
     /*
     private List<TransactionMetadata> transfer(String ethAddress, String bnbAddress, BigInteger amount,
                                                int decimals, Wallet binanceWallet, String transferSymbol)

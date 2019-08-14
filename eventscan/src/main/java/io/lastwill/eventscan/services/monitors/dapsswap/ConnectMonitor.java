@@ -11,16 +11,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-import org.springframework.util.MultiValueMap;
 
-import java.util.Collection;
 import java.util.Objects;
 
 @Slf4j
 @Component
-public class ConnectMonitor {
+public class ConnectMonitor extends AbstractMonitor {
     @Autowired
     private TransactionProvider transactionProvider;
 
@@ -30,19 +27,14 @@ public class ConnectMonitor {
     @Value("${io.lastwill.eventscan.daps-transition.connector-address}")
     private String connectorAddress;
 
-    @EventListener
-    public void onConnect(final NewBlockEvent newBlockEvent) {
-        if (newBlockEvent.getNetworkType() != NetworkType.ETHEREUM_MAINNET) {
-            return;
-        }
+    @Override
+    protected boolean checkCondition(NewBlockEvent newBlockEvent) {
+        return newBlockEvent.getNetworkType() == NetworkType.ETHEREUM_MAINNET;
+    }
 
-        MultiValueMap<String, WrapperTransaction> transactions = newBlockEvent.getTransactionsByAddress();
-        transactions
-                .keySet()
-                .stream()
-                .filter(address -> address.equalsIgnoreCase(connectorAddress))
-                .map(transactions::get)
-                .flatMap(Collection::stream)
+    @Override
+    protected void processBlockEvent(NewBlockEvent newBlockEvent) {
+        filterTransactionsByAddress(newBlockEvent, connectorAddress)
                 .forEach(transaction -> transactionProvider.getTransactionReceiptAsync(newBlockEvent.getNetworkType(), transaction)
                         .thenAccept(receipt -> receipt.getLogs()
                                 .stream()
@@ -50,10 +42,10 @@ public class ConnectMonitor {
                                 .map(event -> (DapsConnectEvent) event)
                                 .map(event -> getConnectEntry(event, transaction))
                                 .filter(Objects::nonNull)
-                                .peek(connectRepository::save)
-                                .forEach(connectEntry -> log.info("Connected \"{} : {}\"",
-                                        connectEntry.getEthAddress(), connectEntry.getDapsAddress())
-                                )
+                                .forEach(connectEntry -> {
+                                    connectRepository.save(connectEntry);
+                                    log.info("Connected \"{} : {}\"", connectEntry.getEthAddress(), connectEntry.getDapsAddress());
+                                })
                         )
                 );
     }

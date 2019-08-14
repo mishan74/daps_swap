@@ -6,5 +6,4 @@ import java.math.BigInteger;
 
 public interface Sender {
     void send(EthToDapsTransitionEntry swapEntry);
-    String toString(BigInteger amount, int decimals);
 }
