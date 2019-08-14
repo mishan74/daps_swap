@@ -5,5 +5,5 @@ import io.lastwill.eventscan.model.EthToDapsTransitionEntry;
 import java.math.BigInteger;
 
 public interface Sender {
-    void send(EthToDapsTransitionEntry swapEntry);
+    void send(EthToDapsTransitionEntry transitionEntry);
 }

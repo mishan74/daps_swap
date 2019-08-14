@@ -2,6 +2,7 @@ package io.mywish.daps.blockchain;
 
 import com.neemre.btcdcli4j.core.BitcoindException;
 import com.neemre.btcdcli4j.core.CommunicationException;
+import com.neemre.btcdcli4j.core.client.BtcdClient;
 import com.neemre.btcdcli4j.core.client.BtcdClientImpl;
 import io.lastwill.eventscan.model.NetworkType;
 import io.lastwill.eventscan.repositories.LastBlockRepository;
@@ -46,15 +47,13 @@ public class DapsBCModule {
         );
     }
 
-
     @Bean
     @ConditionalOnProperty("etherscanner.daps.rpc-url.mainnet")
     @ConditionalOnClass(CloseableHttpClient.class)
-    public BtcdClientImpl btcdClient(
+    public BtcdClient btcdClient(
             final CloseableHttpClient closeableHttpClient,
             final @Value("${etherscanner.daps.rpc-url.mainnet}") URI rpc)
             throws BitcoindException, CommunicationException {
-
         String user = null, password = null;
         if (rpc.getUserInfo() != null) {
             String[] credentials = rpc.getUserInfo().split(":");

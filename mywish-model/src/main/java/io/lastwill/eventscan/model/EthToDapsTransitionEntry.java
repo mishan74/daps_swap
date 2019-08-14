@@ -32,7 +32,7 @@ public class EthToDapsTransitionEntry {
     @Setter
     @Column(name = "transfer_status")
     @Enumerated(EnumType.STRING)
-    private TransferStatus transferStatus;
+    private TransferStatus transferStatus = TransferStatus.WAIT_FOR_CONFIRM;
 
     public EthToDapsTransitionEntry(EthToDapsConnectEntry connectEntry, BigInteger amount, String ethTxHash) {
         this.connectEntry = connectEntry;
