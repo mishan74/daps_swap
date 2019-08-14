@@ -1,18 +1,21 @@
 package io.mywish.daps.blockchain;
 
+import com.neemre.btcdcli4j.core.BitcoindException;
+import com.neemre.btcdcli4j.core.CommunicationException;
 import com.neemre.btcdcli4j.core.client.BtcdClientImpl;
 import io.lastwill.eventscan.model.NetworkType;
 import io.lastwill.eventscan.repositories.LastBlockRepository;
-import io.mywish.daps.blockchain.model.params.DapsMainNetParams;
-import io.mywish.daps.blockchain.model.params.DapsTestNetParams;
 import io.mywish.daps.blockchain.services.DapsNetwork;
 import io.mywish.daps.blockchain.services.DapsScanner;
 import io.mywish.scanner.services.LastBlockDbPersister;
 import io.mywish.scanner.services.LastBlockPersister;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.bitcoinj.params.MainNetParams;
+import org.bitcoinj.params.TestNet3Params;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -31,12 +34,27 @@ public class DapsBCModule {
     @Value("${etherscanner.daps.treat-testnet-as-mainnet:false}")
     private boolean treatTestnetAsMainnet;
 
-    @ConditionalOnProperty("etherscanner.daps.rpc-url.mainnet")
+
     @Bean(name = NetworkType.DAPS_MAINNET_VALUE)
     public DapsNetwork dapsNetMain(
             final CloseableHttpClient closeableHttpClient,
-            final @Value("${etherscanner.daps.rpc-url.mainnet}") URI rpc
-    ) throws Exception {
+            final @Value("${etherscanner.daps.rpc-url.mainnet}") URI rpc) throws BitcoindException, CommunicationException {
+        return new DapsNetwork(
+                NetworkType.DAPS_MAINNET,
+                btcdClient(closeableHttpClient, rpc),
+                treatTestnetAsMainnet ? new TestNet3Params() : new MainNetParams()
+        );
+    }
+
+
+    @Bean
+    @ConditionalOnProperty("etherscanner.daps.rpc-url.mainnet")
+    @ConditionalOnClass(CloseableHttpClient.class)
+    public BtcdClientImpl btcdClient(
+            final CloseableHttpClient closeableHttpClient,
+            final @Value("${etherscanner.daps.rpc-url.mainnet}") URI rpc)
+            throws BitcoindException, CommunicationException {
+
         String user = null, password = null;
         if (rpc.getUserInfo() != null) {
             String[] credentials = rpc.getUserInfo().split(":");
@@ -45,17 +63,13 @@ public class DapsBCModule {
                 password = credentials[1];
             }
         }
-        return new DapsNetwork(
-                NetworkType.DAPS_MAINNET,
-                new BtcdClientImpl(
-                        closeableHttpClient,
-                        rpc.getScheme(),
-                        rpc.getHost(),
-                        rpc.getPort(),
-                        user,
-                        password
-                ),
-                treatTestnetAsMainnet ? new DapsTestNetParams() : new DapsMainNetParams()
+        return new BtcdClientImpl(
+                closeableHttpClient,
+                rpc.getScheme(),
+                rpc.getHost(),
+                rpc.getPort(),
+                user,
+                password
         );
     }
 

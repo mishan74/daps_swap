@@ -20,7 +20,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.github.MyWishPlatform.btcd-cli4j</groupId>
+            <groupId>com.github.mishan74.btcd-cli4j</groupId>
             <artifactId>btcd-cli4j-core</artifactId>
             <version>${btcd-cli4j.version}</version>
         </dependency>
