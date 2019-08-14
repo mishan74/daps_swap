@@ -12,7 +12,6 @@ import io.mywish.scanner.services.EventPublisher;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
 import java.util.*;
@@ -46,9 +45,9 @@ public class BurnMonitor {
         if (entries == null || entries.size() == 0) return;
 
         for (Map.Entry<String, List<WrapperTransaction>> entry : entries.entrySet()) {
-            EthDapsProfile ethDapsProfile;
+            TransitionProfile transitionProfile;
             try {
-                ethDapsProfile = profileStorage.getProfileByEthTokenAddress(entry.getKey());
+                transitionProfile = profileStorage.getProfileByEthTokenAddress(entry.getKey());
             } catch (NoSuchElementException ex) {
                 log.error(ex.getMessage());
                 continue;
@@ -61,10 +60,10 @@ public class BurnMonitor {
                                     .stream()
                                     .filter(event -> event instanceof TransferEvent)
                                     .map(event -> (TransferEvent) event)
-                                    .filter(event -> ethDapsProfile.getEthBurnerAddress().equalsIgnoreCase(event.getTo()))
+                                    .filter(event -> transitionProfile.getEthBurnerAddress().equalsIgnoreCase(event.getTo()))
                                     .forEach(transferEvents::add);
-                            List<EthToDapsSwapEntry> swapEntries = publishEvent(transferEvents, transaction, ethDapsProfile);
-                            sendToken(swapEntries, ethDapsProfile);
+                            List<EthToDapsSwapEntry> swapEntries = publishEvent(transferEvents, transaction, transitionProfile);
+                            sendToken(swapEntries, transitionProfile);
                         });
             }
         }
@@ -74,15 +73,15 @@ public class BurnMonitor {
         return event.getTransactionsByAddress()
                 .entrySet()
                 .stream()
-                .filter(entry -> profileStorage.getEthDapsProfiles()
+                .filter(entry -> profileStorage.getTransitionProfiles()
                         .stream()
-                        .map(EthDapsProfile::getEthTokenAddress)
+                        .map(TransitionProfile::getEthTokenAddress)
                         .collect(Collectors.toList())
                         .contains(entry.getKey()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-    private List<EthToDapsSwapEntry> publishEvent(List<TransferEvent> events, WrapperTransaction transaction, EthDapsProfile profile) {
+    private List<EthToDapsSwapEntry> publishEvent(List<TransferEvent> events, WrapperTransaction transaction, TransitionProfile profile) {
         return events
                 .stream()
                 .map(transferEvent -> {
@@ -124,14 +123,14 @@ public class BurnMonitor {
                 }).collect(Collectors.toList());
     }
 
-    private void sendToken(List<EthToDapsSwapEntry> swapEntries, EthDapsProfile profile) {
+    private void sendToken(List<EthToDapsSwapEntry> swapEntries, TransitionProfile profile) {
         swapEntries
                 .stream()
                 .filter(Objects::nonNull)
                 .forEach(profile.getSender()::send);
     }
 
-    private BigInteger convertEthToDaps(BigInteger amount, EthDapsProfile profile) {
+    private BigInteger convertEthToDaps(BigInteger amount, TransitionProfile profile) {
         int ethDapsDecimals = profile.getEth().getDecimals();
         int dapsDecimals = profile.getDaps().getDecimals();
 

@@ -1,7 +1,8 @@
 package io.lastwill.eventscan.services.monitors.dapsswap;
 
 import io.lastwill.eventscan.events.model.contract.DapsConnectEvent;
-import io.lastwill.eventscan.model.EthDapsProfile;
+import io.lastwill.eventscan.events.model.contract.DapsReconnectEvent;
+import io.lastwill.eventscan.model.TransitionProfile;
 import io.lastwill.eventscan.model.EthToDapsConnectEntry;
 import io.lastwill.eventscan.model.NetworkType;
 import io.lastwill.eventscan.model.ProfileStorage;
@@ -19,7 +20,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
-//@Component
+@Component
 public class ConnectMonitor {
     @Autowired
     private TransactionProvider transactionProvider;
@@ -41,9 +42,9 @@ public class ConnectMonitor {
         if (entries == null || entries.size() == 0) return;
 
         for (Map.Entry<String, List<WrapperTransaction>> entry : entries.entrySet()) {
-            EthDapsProfile ethDapsProfile;
+            TransitionProfile transitionProfile;
             try {
-                ethDapsProfile = profileStorage.getProfileByEthConnectAddress(entry.getKey());
+                transitionProfile = profileStorage.getProfileByEthConnectAddress(entry.getKey());
             } catch (NoSuchElementException ex) {
                 log.error(ex.getMessage());
                 continue;
@@ -54,9 +55,9 @@ public class ConnectMonitor {
                         .thenAccept(receipt -> {
                             receipt.getLogs()
                                     .stream()
-                                    .filter(event -> event instanceof DapsConnectEvent)
+                                    .filter(event -> event instanceof DapsConnectEvent) // todo: + reconnect
                                     .forEach(event -> dapsConnectEvents.add((DapsConnectEvent) event));
-                            List<EthToDapsConnectEntry> ethToDapsConnectEntries = getEthToDapsConnectEntries(dapsConnectEvents, transaction, ethDapsProfile);
+                            List<EthToDapsConnectEntry> ethToDapsConnectEntries = getEthToDapsConnectEntries(dapsConnectEvents, transaction, transitionProfile);
                             saveConnectEntries(ethToDapsConnectEntries);
                         });
             }
@@ -67,29 +68,30 @@ public class ConnectMonitor {
         return newBlockEvent.getTransactionsByAddress()
                 .entrySet()
                 .stream()
-                .filter(entry -> profileStorage.getEthDapsProfiles()
+                .filter(entry -> profileStorage.getTransitionProfiles()
                         .stream()
-                        .map(EthDapsProfile::getEthConnectAddress)
+                        .map(TransitionProfile::getEthConnectAddress)
                         .collect(Collectors.toList())
                         .contains(entry.getKey()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
 
-    private List<EthToDapsConnectEntry> getEthToDapsConnectEntries(List<DapsConnectEvent> events, WrapperTransaction transaction, EthDapsProfile ethDapsProfile) {
+    private List<EthToDapsConnectEntry> getEthToDapsConnectEntries(List<DapsConnectEvent> events, WrapperTransaction transaction, TransitionProfile transitionProfile) {
         return events
                 .stream()
                 .map(putEvent -> {
                     String eth = putEvent.getEth().toLowerCase();
                     byte[] input = transaction.getOutputs().get(0).getRawOutputScript();
-                    byte[] dapsBytes = Arrays.copyOfRange(input, input.length - 64, input.length); // todo: not 64 bytes
+                    byte[] dapsBytes = Arrays.copyOfRange(input, 36, input.length);
                     String daps = new String(dapsBytes).trim();
 
-                    if (connectRepository.existsByEthAddressAndSymbol(eth, ethDapsProfile.getEth().name())) {
-                        log.warn("\"{} : {} - {}\" already connected.", ethDapsProfile.getEth().name(), eth, daps);
+                    // todo: remove
+                    if (connectRepository.existsByEthAddressAndSymbol(eth, transitionProfile.getEth().name())) {
+                        log.warn("\"{} : {} - {}\" already connected.", transitionProfile.getEth().name(), eth, daps);
                         return null;
                     }
-                    return new EthToDapsConnectEntry(ethDapsProfile.getEth().name(), eth, daps);
+                    return new EthToDapsConnectEntry(transitionProfile.getEth().name(), eth, daps);
                 }).collect(Collectors.toList());
     }
 

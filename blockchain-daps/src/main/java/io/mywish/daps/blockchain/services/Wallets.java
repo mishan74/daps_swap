@@ -8,11 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 public class Wallets {
-
     private Map<CryptoCurrency, Wallet> walletStorage;
-
 
     public Wallets(List<WrapperWallet> wallets) {
         this.walletStorage = new HashMap<>();

@@ -10,23 +10,22 @@ import java.util.NoSuchElementException;
 @Component
 @Getter
 public class ProfileStorage {
+    @Autowired
+    private List<TransitionProfile> transitionProfiles;
 
-//    @Autowired
-    private List<EthDapsProfile> ethDapsProfiles;
-
-    public EthDapsProfile getProfileByEthConnectAddress(String linkAddress) {
-        return ethDapsProfiles
+    public TransitionProfile getProfileByEthConnectAddress(String connectAddress) {
+        return transitionProfiles
                 .stream()
-                .filter(e -> e.getEthConnectAddress().equals(linkAddress))
+                .filter(e -> e.getEthConnectAddress().equals(connectAddress))
                 .findFirst()
                 .orElseThrow(() -> new NoSuchElementException(
                         "There is a transaction at address "
-                                + linkAddress
+                                + connectAddress
                                 + ", but the profile is not found"));
     }
 
-    public EthDapsProfile getProfileByEthTokenAddress(String tokenAddress) {
-        return ethDapsProfiles
+    public TransitionProfile getProfileByEthTokenAddress(String tokenAddress) {
+        return transitionProfiles
                 .stream()
                 .filter(e -> e.getEthTokenAddress().equals(tokenAddress))
                 .findFirst()
@@ -36,8 +35,8 @@ public class ProfileStorage {
                                 + ", but the profile is not found"));
     }
 
-    public EthDapsProfile getProfileByEthSymbol(String ethSymbol) {
-        return ethDapsProfiles
+    public TransitionProfile getProfileByEthSymbol(String ethSymbol) {
+        return transitionProfiles
                 .stream()
                 .filter(e -> e.getEth().name().equals(ethSymbol))
                 .findFirst()

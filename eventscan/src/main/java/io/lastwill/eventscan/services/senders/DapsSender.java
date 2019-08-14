@@ -30,31 +30,27 @@ import java.util.Objects;
 
 @Slf4j
 @Component
-public class Bep2WishSender /* implements Sender */ {
+public class DapsSender implements Sender {
     /*
     private static final BigInteger TRANSFER_FEE = BigInteger.valueOf(37500);
-
     @Autowired
     private EventPublisher eventPublisher;
-
-    @Autowired
-    private BinanceDexApiNodeClient dapsClient;
 
     @Autowired
     private EthToDapsSwapEntryRepository swapRepository;
 
     @Autowired
     private ProfileStorage profileStorage;
-
     @Autowired
     private Wallets wallets;
 
-
     @Value("${io.lastwill.eventscan.binance.wish-swap.max-limit:#{null}}")
     private BigInteger coinMaxLimit;
+*/
 
     @Override
     public void send(EthToDapsSwapEntry swapEntry) {
+        /*
         if (swapEntry.getLinkEntry() == null) {
             return;
         }
@@ -144,6 +140,7 @@ public class Bep2WishSender /* implements Sender */ {
                     swapEntry
             ));
         }
+         */
     }
 
     @SuppressWarnings("BigDecimalMethodWithoutRoundingCalled")
@@ -162,6 +159,7 @@ public class Bep2WishSender /* implements Sender */ {
         return df.format(bdAmount);
     }
 
+    /*
     private List<TransactionMetadata> transfer(String ethAddress, String bnbAddress, BigInteger amount,
                                                int decimals, Wallet binanceWallet, String transferSymbol)
             throws IOException, NoSuchAlgorithmException {
