@@ -34,7 +34,7 @@ public class DapsBCModule {
     @Value("${etherscanner.daps.treat-testnet-as-mainnet:false}")
     private boolean treatTestnetAsMainnet;
 
-
+    @ConditionalOnProperty("etherscanner.daps.rpc-url.mainnet")
     @Bean(name = NetworkType.DAPS_MAINNET_VALUE)
     public DapsNetwork dapsNetMain(
             final CloseableHttpClient closeableHttpClient,
