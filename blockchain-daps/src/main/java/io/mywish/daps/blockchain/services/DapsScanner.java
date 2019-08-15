@@ -28,16 +28,7 @@ public class DapsScanner extends ScannerPolling {
             return;
         }
         block.getTransactions()
-                .forEach(transaction -> {
-                    transaction.getOutputs().forEach(output -> {
-                        addressTransactions.add(
-                                output.getAddress(),
-                                transaction
-                        );
-                    });
-//                    eventPublisher.publish(new NewTransactionEvent(networkType, block, output));
-                });
-
+                .forEach(transaction -> addressTransactions.add(null, transaction));
         eventPublisher.publish(new NewBlockEvent(network.getType(), block, addressTransactions));
     }
 }

@@ -31,8 +31,8 @@ public class ConfirmationMonitor extends AbstractMonitor {
                 .values()
                 .stream()
                 .flatMap(Collection::stream)
-                .distinct()
                 .map(WrapperTransaction::getHash)
+                .distinct()
                 .collect(Collectors.toList());
 
         transitionRepository
@@ -42,6 +42,7 @@ public class ConfirmationMonitor extends AbstractMonitor {
                 .forEach(transitionEntry -> {
                     transitionEntry.setTransferStatus(TransferStatus.OK);
                     transitionRepository.save(transitionEntry);
+                    log.info("Transaction " + transitionEntry.getDapsTxHash() + " confirmed");
                 });
     }
 }

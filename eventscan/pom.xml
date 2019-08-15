@@ -43,11 +43,6 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>mywish-bot</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>blockchain</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -60,12 +55,6 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>blockchain-web3</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>bot-integration</artifactId>
-            <version>${project.version}</version>
-            <scope>runtime</scope>
         </dependency>
 
         <!--<dependency>-->
