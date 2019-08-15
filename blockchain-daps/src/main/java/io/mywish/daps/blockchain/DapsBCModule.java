@@ -38,11 +38,10 @@ public class DapsBCModule {
     @ConditionalOnProperty("etherscanner.daps.rpc-url.mainnet")
     @Bean(name = NetworkType.DAPS_MAINNET_VALUE)
     public DapsNetwork dapsNetMain(
-            final CloseableHttpClient closeableHttpClient,
-            final @Value("${etherscanner.daps.rpc-url.mainnet}") URI rpc) throws BitcoindException, CommunicationException {
+            BtcdClient btcdClient) {
         return new DapsNetwork(
                 NetworkType.DAPS_MAINNET,
-                btcdClient(closeableHttpClient, rpc),
+                btcdClient,
                 treatTestnetAsMainnet ? new TestNet3Params() : new MainNetParams()
         );
     }
