@@ -53,6 +53,4 @@ public class Web3BCModule {
                 commitmentChainLength
         );
     }
-
-
 }

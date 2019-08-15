@@ -11,8 +11,6 @@ import io.mywish.daps.blockchain.services.DapsScanner;
 import io.mywish.scanner.services.LastBlockDbPersister;
 import io.mywish.scanner.services.LastBlockPersister;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.bitcoinj.params.MainNetParams;
-import org.bitcoinj.params.TestNet3Params;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -27,23 +25,11 @@ import java.net.URI;
 @Configuration
 @ComponentScan
 public class DapsBCModule {
-    /**
-     * Solution for test purposes only.
-     * When we scan mainnet blocks we build addresses in mainnet format. And is not the same like testnet address.
-     * This flag is solve the issue.
-     */
-    @Value("${etherscanner.daps.treat-testnet-as-mainnet:false}")
-    private boolean treatTestnetAsMainnet;
-
     @ConditionalOnProperty("etherscanner.daps.rpc-url.mainnet")
     @Bean(name = NetworkType.DAPS_MAINNET_VALUE)
     public DapsNetwork dapsNetMain(
             BtcdClient btcdClient) {
-        return new DapsNetwork(
-                NetworkType.DAPS_MAINNET,
-                btcdClient,
-                treatTestnetAsMainnet ? new TestNet3Params() : new MainNetParams()
-        );
+        return new DapsNetwork(NetworkType.DAPS_MAINNET, btcdClient);
     }
 
     @Bean
