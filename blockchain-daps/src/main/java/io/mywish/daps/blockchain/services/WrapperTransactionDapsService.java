@@ -26,7 +26,7 @@ public class WrapperTransactionDapsService {
 
 
     public WrapperTransaction build(Transaction transaction, NetworkParameters networkParameters) {
-        String hash = transaction.getHex();
+        String hash = transaction.getTxId();
         List<String> inputs = new ArrayList<>();
         List<WrapperOutput> outputs = transaction.getDetails().stream()
                 .map(output -> outputBuilder.build(transaction, output))
