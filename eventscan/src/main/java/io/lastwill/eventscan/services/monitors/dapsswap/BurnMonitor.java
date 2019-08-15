@@ -8,7 +8,7 @@ import io.lastwill.eventscan.model.NetworkType;
 import io.lastwill.eventscan.repositories.EthToDapsConnectEntryRepository;
 import io.lastwill.eventscan.repositories.EthToDapsTransitionEntryRepository;
 import io.lastwill.eventscan.services.TransactionProvider;
-import io.lastwill.eventscan.services.senders.DapsSender;
+import io.lastwill.eventscan.services.senders.Sender;
 import io.lastwill.eventscan.utils.CurrencyUtil;
 import io.mywish.blockchain.WrapperTransaction;
 import io.mywish.scanner.model.NewBlockEvent;
@@ -30,10 +30,10 @@ public class BurnMonitor extends AbstractMonitor {
     private EthToDapsConnectEntryRepository connectRepository;
 
     @Autowired
-    private EthToDapsTransitionEntryRepository swapRepository;
+    private EthToDapsTransitionEntryRepository transitionRepository;
 
     @Autowired
-    private DapsSender dapsSender;
+    private Sender dapsSender;
 
     @Value("${io.lastwill.eventscan.daps-transition.burner-address}")
     private String burnerAddress;
@@ -57,7 +57,6 @@ public class BurnMonitor extends AbstractMonitor {
                                 .filter(event -> burnerAddress.equalsIgnoreCase(event.getTo()))
                                 .map(event -> getTransitionEntry(event, transaction))
                                 .filter(Objects::nonNull)
-                                .map(swapRepository::save)
                                 .peek(transitionEntry -> log.info(
                                         "{} burned {} {}",
                                         transitionEntry.getConnectEntry().getEthAddress(),
@@ -78,7 +77,7 @@ public class BurnMonitor extends AbstractMonitor {
         }
 
         String txHash = transaction.getHash();
-        EthToDapsTransitionEntry swapEntry = swapRepository.findByEthTxHash(txHash);
+        EthToDapsTransitionEntry swapEntry = transitionRepository.findByEthTxHash(txHash);
         if (swapEntry != null) {
             log.warn("Transition entry already in DB: {}", txHash);
             return null;

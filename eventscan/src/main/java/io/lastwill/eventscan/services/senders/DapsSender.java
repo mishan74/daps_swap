@@ -33,6 +33,7 @@ public class DapsSender implements Sender {
         BigDecimal amount = new BigDecimal(transitionEntry.getAmount(), CryptoCurrency.DAPS.getDecimals());
         try {
             String txHash = dapsClient.sendToStealthAddress(address, amount);
+            transitionEntry.setTransferStatus(TransferStatus.WAIT_FOR_CONFIRM);
             transitionEntry.setDapsTxHash(txHash);
             log.info("DAPS tokens transferred: {}", txHash);
         } catch (BitcoindException | CommunicationException e) {
