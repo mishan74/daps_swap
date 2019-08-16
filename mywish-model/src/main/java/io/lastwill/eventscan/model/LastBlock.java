@@ -1,12 +1,15 @@
 package io.lastwill.eventscan.model;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "last_block")
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LastBlock {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,9 +21,6 @@ public class LastBlock {
 
     @Column(name = "block_number", nullable = false)
     private Long blockNumber;
-
-    protected LastBlock() {
-    }
 
     public LastBlock(NetworkType network, Long blockNumber) {
         this.network = network;

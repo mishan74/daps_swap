@@ -1,6 +1,6 @@
 package io.mywish.web3.blockchain.service;
 
-import io.mywish.blockchain.*;
+import io.mywish.blockchain.ContractEvent;
 import io.mywish.web3.blockchain.builders.Web3ContractEventBuilder;
 import io.mywish.web3.blockchain.model.Web3ContractEventDefinition;
 import lombok.extern.slf4j.Slf4j;
@@ -20,10 +20,9 @@ import java.util.Map;
 @Slf4j
 @Component
 public class WrapperLogWeb3Service {
+    private final Map<String, Web3ContractEventBuilder> buildersBySignature = new HashMap<>();
     @Autowired
     private List<Web3ContractEventBuilder> builders;
-
-    private final Map<String, Web3ContractEventBuilder> buildersBySignature = new HashMap<>();
 
     @PostConstruct
     protected void init() throws Exception {

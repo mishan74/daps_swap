@@ -11,16 +11,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
 public abstract class ScannerPolling extends Scanner {
+    protected final AtomicBoolean isTerminated = new AtomicBoolean(false);
+
     private final Object sync = new Object();
 
     private Long lastBlockNo;
 
     @Getter
     private int commitmentChainLength;
+
     @Getter
     private long pollingInterval;
-
-    protected final AtomicBoolean isTerminated = new AtomicBoolean(false);
 
     private final Runnable poller = () -> {
         while (!isTerminated.get()) {
@@ -65,6 +66,13 @@ public abstract class ScannerPolling extends Scanner {
         }
     };
 
+    public ScannerPolling(WrapperNetwork network, LastBlockPersister lastBlockPersister, Long pollingInterval, Integer commitmentChainLength) {
+        super(network, lastBlockPersister);
+        this.setWorker(poller);
+        this.commitmentChainLength = commitmentChainLength;
+        this.pollingInterval = pollingInterval;
+    }
+
     private void loadNextBlock() throws Exception {
         long delta = lastBlockNo - nextBlockNo;
         if (delta <= getCommitmentChainLength()) {
@@ -83,14 +91,6 @@ public abstract class ScannerPolling extends Scanner {
         nextBlockNo++;
 
         processBlock(block);
-    }
-
-
-    public ScannerPolling(WrapperNetwork network, LastBlockPersister lastBlockPersister, Long pollingInterval, Integer commitmentChainLength) {
-        super(network, lastBlockPersister);
-        this.setWorker(poller);
-        this.commitmentChainLength = commitmentChainLength;
-        this.pollingInterval = pollingInterval;
     }
 
     @PostConstruct

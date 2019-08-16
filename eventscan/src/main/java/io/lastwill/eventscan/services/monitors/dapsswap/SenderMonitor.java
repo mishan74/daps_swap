@@ -1,14 +1,16 @@
-package io.lastwill.eventscan.services.senders;
+package io.lastwill.eventscan.services.monitors.dapsswap;
 
 import com.neemre.btcdcli4j.core.BitcoindException;
 import com.neemre.btcdcli4j.core.CommunicationException;
 import com.neemre.btcdcli4j.core.client.BtcdClient;
+import io.lastwill.eventscan.events.model.TokensBurnedEvent;
 import io.lastwill.eventscan.model.CryptoCurrency;
 import io.lastwill.eventscan.model.EthToDapsTransitionEntry;
 import io.lastwill.eventscan.model.TransferStatus;
 import io.lastwill.eventscan.repositories.EthToDapsTransitionEntryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -16,8 +18,8 @@ import java.math.BigInteger;
 
 @Slf4j
 @Component
-public class DapsSender implements Sender {
-    private static final BigInteger TRANSFER_FEE = BigInteger.valueOf(37500); // todo: set real
+public class SenderMonitor {
+    private static final BigInteger TRANSFER_FEE = BigInteger.valueOf(100000000);
 
     @Autowired
     private EthToDapsTransitionEntryRepository transitionRepository;
@@ -25,8 +27,12 @@ public class DapsSender implements Sender {
     @Autowired
     private BtcdClient dapsClient;
 
-    @Override
-    public void send(EthToDapsTransitionEntry transitionEntry) {
+    @EventListener
+    public void onBurn(TokensBurnedEvent event) {
+        send(event.getTransitionEntry());
+    }
+
+    private void send(EthToDapsTransitionEntry transitionEntry) {
         if (!checkTransition(transitionEntry)) return;
 
         String address = transitionEntry.getConnectEntry().getDapsAddress();

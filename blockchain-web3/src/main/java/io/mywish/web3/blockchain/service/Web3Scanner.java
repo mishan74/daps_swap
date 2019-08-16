@@ -31,18 +31,15 @@ public class Web3Scanner extends ScannerPolling {
                     WrapperOutput to = transaction.getOutputs().get(0);
                     if (from != null) {
                         addressTransactions.add(from.toLowerCase(), transaction);
-                    }
-                    else {
+                    } else {
                         log.warn("Empty from field for transaction {}. Skip it.", transaction.getHash());
                     }
                     if (to != null && to.getAddress() != null) {
                         addressTransactions.add(to.getAddress().toLowerCase(), transaction);
-                    }
-                    else {
+                    } else {
                         if (transaction.getCreates() != null) {
                             addressTransactions.add(transaction.getCreates().toLowerCase(), transaction);
-                        }
-                        else {
+                        } else {
                             try {
                                 WrapperTransactionReceipt receipt = network.getTxReceipt(transaction);
                                 String contract = receipt.getContracts().get(0);
@@ -51,8 +48,7 @@ public class Web3Scanner extends ScannerPolling {
                                         contract.toLowerCase(),
                                         transaction
                                 );
-                            }
-                            catch (Exception e) {
+                            } catch (Exception e) {
                                 log.error("Error on getting transaction {} receipt.", transaction.getHash(), e);
                                 log.warn("Empty to and creates field for transaction {}. Skip it.", transaction.getHash());
                             }

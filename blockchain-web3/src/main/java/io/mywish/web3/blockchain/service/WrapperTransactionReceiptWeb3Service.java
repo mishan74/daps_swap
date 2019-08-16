@@ -25,8 +25,7 @@ public class WrapperTransactionReceiptWeb3Service {
         BigInteger status;
         if (receipt.getStatus().startsWith("0x")) {
             status = Numeric.decodeQuantity(receipt.getStatus());
-        }
-        else {
+        } else {
             status = new BigInteger(receipt.getStatus());
         }
         return status.compareTo(BigInteger.ZERO) != 0;
@@ -52,8 +51,7 @@ public class WrapperTransactionReceiptWeb3Service {
     private ContractEvent buildEvent(Log eventLog) {
         try {
             return logBuilder.build(eventLog);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.warn("Impossible to build event from log with signature {}, tx {}.", eventLog.getTopics().get(0), eventLog.getTransactionHash(), e);
             return null;
         }

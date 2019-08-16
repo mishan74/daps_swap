@@ -17,9 +17,13 @@ public abstract class WrapperNetwork {
     }
 
     abstract public Long getLastBlock() throws Exception;
+
     abstract public BigInteger getBalance(String address, Long blockNo) throws Exception;
+
     abstract public WrapperBlock getBlock(String hash) throws Exception;
+
     abstract public WrapperBlock getBlock(Long number) throws Exception;
+
     abstract public WrapperTransactionReceipt getTxReceipt(WrapperTransaction transaction) throws Exception;
 
     public CompletableFuture<BigInteger> getBalanceAsync(String address, Long blockNo) {
@@ -41,6 +45,4 @@ public abstract class WrapperNetwork {
             }
         });
     }
-
-//    public abstract boolean getExternalId(String address);
 }

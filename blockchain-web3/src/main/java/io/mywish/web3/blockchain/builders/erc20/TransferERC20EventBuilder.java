@@ -2,7 +2,6 @@ package io.mywish.web3.blockchain.builders.erc20;
 
 import io.lastwill.eventscan.events.TypeHelper;
 import io.lastwill.eventscan.events.model.contract.erc20.TransferEvent;
-import io.mywish.blockchain.ContractEventDefinition;
 import io.mywish.web3.blockchain.builders.Web3ContractEventBuilder;
 import io.mywish.web3.blockchain.model.Web3ContractEventDefinition;
 import io.mywish.web3.blockchain.model.WrapperType;
@@ -20,9 +19,6 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class TransferERC20EventBuilder extends Web3ContractEventBuilder<TransferEvent> {
-    @Autowired
-    private TypeHelper typeHelper;
-
     private final Web3ContractEventDefinition definition = new Web3ContractEventDefinition(
             "Transfer",
             Arrays.asList(
@@ -31,6 +27,9 @@ public class TransferERC20EventBuilder extends Web3ContractEventBuilder<Transfer
                     WrapperType.create(Uint.class, false)
             )
     );
+
+    @Autowired
+    private TypeHelper typeHelper;
 
     @Override
     public TransferEvent build(String address, List<Object> values) {

@@ -1,6 +1,5 @@
 package io.lastwill.eventscan.events.model.contract;
 
-
 import io.mywish.blockchain.ContractEvent;
 import io.mywish.blockchain.ContractEventDefinition;
 
