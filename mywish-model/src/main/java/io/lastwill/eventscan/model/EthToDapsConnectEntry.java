@@ -21,12 +21,8 @@ public class EthToDapsConnectEntry {
     @Column(nullable = false, name = "daps_address")
     private String dapsAddress;
 
-    @Column(nullable = false, name = "connect_tx_hash", unique = true)
-    private String connectTxHash;
-
-    public EthToDapsConnectEntry(String ethAddress, String dapsAddress, String connectTxHash) {
+    public EthToDapsConnectEntry(String ethAddress, String dapsAddress) {
         this.ethAddress = ethAddress;
         this.dapsAddress = dapsAddress;
-        this.connectTxHash = connectTxHash;
     }
 }
