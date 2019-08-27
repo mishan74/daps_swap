@@ -59,7 +59,7 @@ public class DapsEthController {
         if (!entry.getEthAddress().isEmpty()) {
             response = new BaseResponse(ALREADY_EXIST_STATUS, entry.getEthAddress());
         } else {
-            String ethAddress = generator.generate(dapsAddress, entry.getId().intValue());
+            String ethAddress = generator.generate(entry.getId().intValue());
             entry.setEthAddress(ethAddress);
             ethToDapsConnectEntryRepository.save(entry);
             response = new BaseResponse(NEW_ADDRESS_STATUS, entry.getEthAddress());
