@@ -14,11 +14,11 @@ import java.math.BigInteger;
 import java.util.List;
 
 @Component
-public class DetermenistivMasterKey {
+public class HdWallet {
 
     private final String seedCode = "yard impulse luxury drive today throw farm pepper survey wreck glass federal";
 
-    public String getAddress(int childId) {
+    public String getChildAddress(int childId) {
         // BitcoinJ
         DeterministicSeed seed = null;
         try {
