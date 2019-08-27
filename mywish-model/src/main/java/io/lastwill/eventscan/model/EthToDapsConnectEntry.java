@@ -3,6 +3,7 @@ package io.lastwill.eventscan.model;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -15,6 +16,7 @@ public class EthToDapsConnectEntry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @Column(nullable = false, name = "eth_address")
     private String ethAddress;
 

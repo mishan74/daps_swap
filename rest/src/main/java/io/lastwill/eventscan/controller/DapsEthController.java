@@ -52,19 +52,18 @@ public class DapsEthController {
         }
         EthToDapsConnectEntry entry;
         entry = ethToDapsConnectEntryRepository.findFirstByDapsAddress(dapsAddress);
-
-        if (entry != null) {
+        if (entry == null) {
+            entry = new EthToDapsConnectEntry("", dapsAddress);
+            ethToDapsConnectEntryRepository.save(entry);
+        }
+        if (!entry.getEthAddress().isEmpty()) {
             response = new BaseResponse(ALREADY_EXIST_STATUS, entry.getEthAddress());
         } else {
-            String ethAddress = generator.generate(dapsAddress);
-            saveNewEntry(ethAddress, dapsAddress);
-            response = new BaseResponse(NEW_ADDRESS_STATUS, ethAddress);
+            String ethAddress = generator.generate(dapsAddress, entry.getId().intValue());
+            entry.setEthAddress(ethAddress);
+            ethToDapsConnectEntryRepository.save(entry);
+            response = new BaseResponse(NEW_ADDRESS_STATUS, entry.getEthAddress());
         }
         return response;
-    }
-
-    private void saveNewEntry(String ethAddress, String dapsAddress) {
-        EthToDapsConnectEntry entry = new EthToDapsConnectEntry(ethAddress, dapsAddress);
-        ethToDapsConnectEntryRepository.save(entry);
     }
 }
