@@ -1,37 +1,24 @@
 package io.lastwill.eventscan.model;
 
-import org.bitcoinj.crypto.ChildNumber;
-import org.bitcoinj.crypto.DeterministicKey;
-import org.bitcoinj.crypto.HDUtils;
-import org.bitcoinj.wallet.DeterministicKeyChain;
+import lombok.Getter;
 import org.bitcoinj.wallet.DeterministicSeed;
 import org.bitcoinj.wallet.UnreadableWalletException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.web3j.crypto.Credentials;
 
-
-import java.math.BigInteger;
-import java.util.List;
 
 @Component
+@Getter
 public class HdWallet {
 
-    private final String seedCode = "yard impulse luxury drive today throw farm pepper survey wreck glass federal";
+    private DeterministicSeed seed;
 
-    public String getChildAddress(int childId) {
-        // BitcoinJ
-        DeterministicSeed seed = null;
+    public HdWallet(@Value("${io.lastwill.eventscan.model.hdwallet.seed}") String seedCode,
+                    @Value("${io.lastwill.eventscan.model.hdwallet.creation.time.seconds}") long creationTimeSeconds) {
         try {
-            seed = new DeterministicSeed(seedCode, null, "", 1409478661L);
+            this.seed = new DeterministicSeed(seedCode, null, "", creationTimeSeconds);
         } catch (UnreadableWalletException e) {
             e.printStackTrace();
         }
-        DeterministicKeyChain chain = DeterministicKeyChain.builder().seed(seed).build();
-        List<ChildNumber> keyPath = HDUtils.parsePath("M/44H/60H/0H/" + childId + "/");
-        DeterministicKey key = chain.getKeyByPath(keyPath, true);
-        BigInteger privKey = key.getPrivKey();
-        // Web3j
-        Credentials credentials = Credentials.create(privKey.toString(16));
-        return credentials.getAddress();
     }
 }
