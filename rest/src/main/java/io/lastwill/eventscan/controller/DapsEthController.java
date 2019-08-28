@@ -16,33 +16,16 @@ public class DapsEthController {
     @Autowired
     private EthToDapsConnectEntryRepository ethToDapsConnectEntryRepository;
 
-    private final String sharedKey = "SHARED_KEY";
-
-    private static final String ERROR_STATUS = "error";
     private static final String NEW_ADDRESS_STATUS = "new";
     private static final String ALREADY_EXIST_STATUS = "exist";
-    private static final String TEST_STATUS = "test";
 
-    @GetMapping
-    public BaseResponse showStatus() {
-        return new BaseResponse(TEST_STATUS, "0X0fdfjdjs...");
-    }
 
     @PostMapping(value = "/get-eth-address", produces = "application/json")
-    public BaseResponse pay(@RequestParam(value = "key") String key, @RequestBody DapsRequest request) {
-        final BaseResponse response;
-
-        if (sharedKey.equalsIgnoreCase(key)) {
-            if (request == null || request.getDapsAddress() == null) {
-                return null;
-            }
-            String dapsAddress = request.getDapsAddress();
-
-            response = getResponceByAddress(dapsAddress);
-        } else {
-            response = new BaseResponse(ERROR_STATUS, request.getDapsAddress());
+    public BaseResponse pay(@RequestBody DapsRequest request) {
+        if (request == null || request.getDapsAddress() == null) {
+            return null;
         }
-        return response;
+        return getResponceByAddress(request.getDapsAddress());
     }
 
     private BaseResponse getResponceByAddress(String dapsAddress) {
